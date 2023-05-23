@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from pathlib import Path
 from dotenv import load_dotenv
 from os import getenv
@@ -10,6 +11,7 @@ load_dotenv(dotenv_dir)
 
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app():
@@ -19,6 +21,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
