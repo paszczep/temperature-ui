@@ -1,3 +1,3 @@
 # temperature-ui
 
-temperature control for food profuction UI
+temperature control for food production - UI
