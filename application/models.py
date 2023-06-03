@@ -6,21 +6,24 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    name = db.Column(db.String(1000))
+    name = db.Column(db.String(100))
 
 
 class Container(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30))
-    status = db.Column(db.String(30))
+    name = db.Column(db.String(100), primary_key=True)
+    logged = db.Column(db.String(100))
+    received = db.Column(db.String(100))
+    power = db.Column(db.String(100))
+    setpoint = db.Column(db.String(100))
+    database_time = db.Column(db.String(100))
 
 
 class Thermometer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(1000))
-    reading = db.Column(db.String(1000))
-    reading_time = db.Column(db.String(1000))
-    capture_time = db.Column(db.String(1000))
+    device_id = db.Column(db.Integer, primary_key=True)
+    device_name = db.Column(db.String(100))
+    temperature = db.Column(db.String(100))
+    measure_time = db.Column(db.String(100))
+    database_time = db.Column(db.String(100))
 
 
 class Task(db.Model):
