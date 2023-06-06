@@ -1,5 +1,7 @@
+venv
 instance
 __pycache__
 .idea
 migrations
 .env
+requirements.txt

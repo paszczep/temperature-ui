@@ -1,13 +1,16 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm
-from wtforms.fields import DateTimeField
-from wtforms.validators import DataRequired
-from wtforms import widgets
 from wtforms_alchemy import QuerySelectMultipleField
+from wtforms import widgets
 from .models import Container, Thermometer
-
+from . import db
 
 input = Blueprint('input', __name__)
+
+@input.route('/task')
+def tasks():
+    container = Container.query.first()
+    return render_template('container.html', container=container.name)
 
 
 class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
@@ -19,9 +22,9 @@ class MyForm(FlaskForm):
     choices = QuerySelectMultipleFieldWithCheckboxes("Choices")
 
 
-@input.route("task/<container_name>", methods=["POST", "GET"])
-def index(parent_id):
-    parent = Container.query.get(parent_id)
+@input.route("/task/<container>", methods=["POST", "GET"])
+def new_task(container):
+    parent = Container.query.filter(Container.name == container).first()
     form = MyForm(data={"choices": parent.children})
     form.choices.query = Thermometer.query.all()
 
@@ -30,4 +33,5 @@ def index(parent_id):
         parent.children.extend(form.choices.data)
         db.session.commit()
 
-    return render_template("index.html", form=form)
+    return render_template("task.html", form=form)
+

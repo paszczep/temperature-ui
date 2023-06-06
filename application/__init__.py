@@ -40,5 +40,8 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    from .input import input as input_blueprint
+    app.register_blueprint(input_blueprint)
+
     return app
 
