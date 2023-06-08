@@ -9,8 +9,12 @@ input = Blueprint('input', __name__)
 
 @input.route('/task')
 def tasks():
-    container = Container.query.first()
-    return render_template('container.html', container=container.name)
+    containers = [container.__dict__ for container in Container.query.all()]
+    return render_template(
+        'control.html',
+        containers=containers,
+        len=len(containers)
+    )
 
 
 class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
@@ -24,7 +28,9 @@ class MyForm(FlaskForm):
 
 @input.route("/task/<container>", methods=["POST", "GET"])
 def new_task(container):
-    parent = Container.query.filter(Container.name == container).first()
+    # container = str(container)[11:-1]
+    parent = Container.query.get(container)
+    print('!!!!!!', parent)
     form = MyForm(data={"choices": parent.children})
     form.choices.query = Thermometer.query.all()
 

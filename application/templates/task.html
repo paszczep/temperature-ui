@@ -2,8 +2,35 @@
 
 {% block content %}
     <form method="POST">
-        {{ form.csrf_token }}
-        {{ form.choices }}
-        <button>Submit</button>
+<div class="tile is-ancestor">
+  <div class="tile is-4 is-vertical is-parent">
+    <div class="tile is-child box">
+      <p class="title">One</p>
+    </div>
+    <div class="tile is-child box">
+      <p class="title">Two</p>
+    </div>
+  </div>
+  <div class="tile is-parent">
+    <div class="tile is-child box has-background-info">
+      <p class="title">
+          <div class="tile">
+            {{ form.csrf_token }}
+            {{ form.choices }}
+        </div>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+        <div class="tile">text</div>
+
+                <div class="tile buttons is-centered">
+                    <button class="button is-info is-large">Save</button>
+                </div>
+
+
+    </div>
     </form>
 {% endblock %}
