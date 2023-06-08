@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tempehomat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
-<!--    missing awesome icons-->
+    <!--    missing awesome icons-->
     <style>
     .center {
         display: flex;
@@ -60,15 +60,15 @@
                 </div>
             </nav>
         </div>
+    </section>
 
-        <section class="hero is-fullheight">
-            <div class="hero-body has-background-dark">
-                <div class="container center">
-                    {% block content %}
-                    {% endblock %}
-                </div>
+    <section class="hero is-fullheight">
+        <div class="hero-body has-background-dark">
+            <div class="container is-widescreen center">
+                {% block content %}
+                {% endblock %}
             </div>
-        </section>
+        </div>
     </section>
 </body>
 

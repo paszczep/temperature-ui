@@ -31,7 +31,7 @@ class Thermometer(db.Model):
     parents = db.relationship("Container", secondary="container_thermometer", back_populates="children")
 
     def __str__(self):
-        return f"{self.device_name} {self.temperature}"
+        return self.device_name
 
 
 db.Table(
