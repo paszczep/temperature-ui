@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="notification has-background-warning">
-<table class="table is-hoverable has-background-warning">
+<div class="column is-7 section hero box has-background-grey">
+<table class="table is-hoverable has-background-grey has-text-link">
     <thead>
     <tr>
         <th>id</th>
@@ -14,13 +14,14 @@
     {%for i in range(0, len)%}
     <tr>
         <td>
-            <a href="{{ url_for('input.new_task', container=containers[i]['name']) }}">{{ containers[i]['name'] }}</a>
+    <a href="{{ url_for('input.new_task', container=containers[i]['name']) }}">
+                {{ containers[i]['name'] }}
+    </a>
         </td>
         <td>{{ containers[i]['given_name'] }}</td>
         <td>{{ containers[i]['power'] }}</td>
         <td>{{ containers[i]['setpoint'] }}</td>
     </tr>
-
     {%endfor%}
     </tbody>
 </table>

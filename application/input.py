@@ -28,9 +28,7 @@ class MyForm(FlaskForm):
 
 @input.route("/task/<container>", methods=["POST", "GET"])
 def new_task(container):
-    # container = str(container)[11:-1]
     parent = Container.query.get(container)
-    print('!!!!!!', parent)
     form = MyForm(data={"choices": parent.children})
     form.choices.query = Thermometer.query.all()
 
@@ -39,5 +37,13 @@ def new_task(container):
         parent.children.extend(form.choices.data)
         db.session.commit()
 
-    return render_template("task.html", form=form)
+    other_containers = [cont.__dict__ for cont in Container.query.all() if cont is not parent]
+
+    return render_template(
+        "task.html",
+        form=form,
+        the_container=parent.__dict__,
+        other_containers=other_containers,
+        others_len=len(other_containers)
+    )
 

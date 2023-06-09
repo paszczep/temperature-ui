@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="is-size-1 has-text-success">
+        GeeksforGeeks
+    </h1>
+    <p class="is-size-3">
+      Bulma Input with Font Awesome icons
+    </p>
+
+
+    <div class="container">
+        <div class="field">
+            <p class="control has-icons-right">
+                <input class="input" type="text"
+                    placeholder="Enter Name">
+                <span class="icon is-right">
+                    <i class="fa fa-check"></i>
+                </span>
+            </p>
+
+        </div>
+
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+                <input class="input" type="text"
+                       placeholder="Enter Address">
+                <span class="icon is-small is-left">
+                    <i class="fa fa-map-marker"></i>
+                </span>
+                <span class="icon is-small is-right">
+                    <i class="fa fa-check"></i>
+                </span>
+            </p>
+
+        </div>
+
+        <div class="field">
+            <p class="control has-icons-left has-icons-right">
+                <input class="input" type="number"
+                       placeholder="Mob No.">
+                <span class="icon is-small is-left">
+                    <i class="fa fa-mobile"></i>
+                </span>
+                <span class="icon is-small is-right">
+                    <i class="fa fa-check"></i>
+                </span>
+            </p>
+
+        </div>
+    </div>
+
+{% endblock %}

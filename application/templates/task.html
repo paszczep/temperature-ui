@@ -3,25 +3,51 @@
 {% block content %}
 <form method="POST">
 
-
-
 <div class="columns">
-    <div class="column tile box">
-            CONTAINERS
+    <div class="column is-one-third box tile box">
+
+        <div class="tile is-ancestor">
+            <div class="tile is-parent is-vertical center">
+            <div class="tile is-size-3 has-text-link">Containers</div>
+
+            <div class="tile center button is-rounded is-link is-outlined is-medium">
+                <a href="{{  url_for('input.tasks')  }}">
+                <div class="tile is-size-1">
+                    <span class="icon is-large">
+                        <ion-icon name="arrow-back-outline"></ion-icon>
+                    </span>
+                </div>
+                </a>
+            </div>
+            </div>
+            <div class="tile is-parent buttons">
+                {%for i in range(0, others_len)%}
+                <div class="tile button is-link is-outlined is-10">
+                    <a href="{{ url_for('input.new_task', container=other_containers[i]['name']) }}">
+                        {{ other_containers[i]['name'] }}
+                    </a>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+
     </div>
     <div class="column">
-      <h1 class="title is-size-1 has-text-grey">LOREM IPSUM DOLOR acab </h1>
+      <h1 class="title is-size-1 has-text-grey">
+          {{ the_container['name'] }} {{ the_container['given_name'] }}
+      </h1>
     </div>
 </div>
 
-
-
 <div class="columns">
-    <div class="column is-half tile box has-background-black">
-
+    <div class="column is-one-third box has-background-black">
                 {{ form.csrf_token }}
                 {{ form.choices }}
-
+    </div>
+    <div class="column">
+        <div class="tile box">
+            puste
+        </div>
     </div>
     <div class="column">
         <div class="tile box">
@@ -30,13 +56,9 @@
     </div>
 </div>
 
-
-
 <div class="columns">
-    <div class="column">
-    <div class="tile box buttons is-centered">
+    <div class="column is-4 is-offset-8 box">
         <button class="button is-info is-large">Save</button>
-    </div>
     </div>
 </div>
 
