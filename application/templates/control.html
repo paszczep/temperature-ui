@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="column is-7 section hero box has-background-grey">
+<div class="column is-three-fifths hero box has-background-grey">
 <table class="table is-hoverable has-background-grey has-text-link">
     <thead>
     <tr>
-        <th>id</th>
-        <th>given name</th>
-        <th>status</th>
-        <th>setpoint</th>
+        <th class="is-size-6 has-text-link">given name</th>
+        <th class="is-size-6 has-text-link">id</th>
+        <th class="is-size-6 has-text-link">status</th>
+        <th class="is-size-6 has-text-link">setpoint</th>
     </tr>
     </thead>
     <tbody>
     {%for i in range(0, len)%}
     <tr>
         <td>
-    <a href="{{ url_for('input.new_task', container=containers[i]['name']) }}">
-                {{ containers[i]['name'] }}
-    </a>
+            <a href="{{ url_for('input.new_task', container=containers[i]['name']) }}">
+                <strong>{{ containers[i]['given_name'] }}</strong>
+            </a>
         </td>
-        <td>{{ containers[i]['given_name'] }}</td>
+        <td>{{ containers[i]['name'] }}</td>
         <td>{{ containers[i]['power'] }}</td>
         <td>{{ containers[i]['setpoint'] }}</td>
     </tr>

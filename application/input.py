@@ -31,9 +31,10 @@ def new_task(container):
     parent = Container.query.get(container)
     form = MyForm(data={"choices": parent.children})
     form.choices.query = Thermometer.query.all()
-
+    new_given_name = request.form.get('the_container_given_name')
     if form.validate_on_submit():
         parent.children.clear()
+        parent.given_name = new_given_name
         parent.children.extend(form.choices.data)
         db.session.commit()
 
