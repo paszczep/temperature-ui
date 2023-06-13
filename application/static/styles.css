@@ -1,0 +1,15 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+.green {
+  background-color: green;
+}
+
+.white-border {
+    border-color: white;
+    border-style: solid;
+    border-width: thin;
+}

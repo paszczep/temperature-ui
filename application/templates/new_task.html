@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card hero box is-link tile is-ancestor is-vertical">
+<!--    navigation tabs-->
+    <form method="POST">
+{{ form.csrf_token }}
+
+
+        <tabs class="tile tabs is-centered is-toggle">
+            <ul>
+                    {% for cont in containers %}
+                    {% if cont == task_container: %}
+                <li class="is-active">
+                    <a href="{{ url_for('input.new_task', container=cont.name) }}">{{ cont.given_name }}</a>
+                </li>
+                    {% else %}
+                <li>
+                    <a href="{{ url_for('input.new_task', container=cont.name) }}">{{ cont.given_name }}</a>
+                </li>
+                    {% endif %}
+                    {% endfor %}
+            </ul>
+        </tabs>
+
+
+    <tile class="tile is-child is-vertical is-link">
+<!--    text input new given_name -->
+        <tile class="tile section">
+           <input
+                   class="input is-link"
+                   type="text"
+                   name="given_name"
+                   value="{{ request.form.given_name }}"
+                   placeholder="{{ task_container.given_name }}">
+        </tile>
+<!--        thermometer checkboxes-->
+
+        <tile class="tile is-vertical box">
+            {% for therm in thermometers %}
+            <label class="checkbox">
+                <input type="checkbox" name="thermometer_select" value="{{ therm.device_id }}">
+                {{therm.device_name}}
+            </label>
+            {% endfor %}
+        </tile>
+    </tile>
+<!-- go buttons -->
+    <buttons class="tile section buttons">
+        <button class="button is-link is-inverted is-large" type="submit">Go!</button>
+
+    </buttons>
+
+
+    </form>
+</div>
+
+{% endblock %}

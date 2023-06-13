@@ -1,28 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="column is-three-fifths hero box has-background-grey">
+<div class="column hero box has-background-grey">
 <table class="table is-hoverable has-background-grey has-text-link">
     <thead>
     <tr>
-        <th class="is-size-6 has-text-link">given name</th>
-        <th class="is-size-6 has-text-link">id</th>
-        <th class="is-size-6 has-text-link">status</th>
-        <th class="is-size-6 has-text-link">setpoint</th>
+        <th class="is-size-5 has-text-link">given name</th>
+        <th class="is-size-5 has-text-link">id</th>
+        <th class="is-size-5 has-text-link">status</th>
+        <th class="is-size-5 has-text-link">setpoint</th>
     </tr>
     </thead>
     <tbody>
-    {%for i in range(0, len)%}
+    {% for container in containers %}
+
     <tr>
         <td>
-            <a href="{{ url_for('input.new_task', container=containers[i]['name']) }}">
-                <strong>{{ containers[i]['given_name'] }}</strong>
-            </a>
+        <a href="{{ url_for('input.new_task', container=container.name) }}">
+                {{ container.given_name }}
+        </a>
         </td>
-        <td>{{ containers[i]['name'] }}</td>
-        <td>{{ containers[i]['power'] }}</td>
-        <td>{{ containers[i]['setpoint'] }}</td>
+        <td>{{ container.name }}</td>
+        <td>{{ container.power }}</td>
+        <td>{{ container.setpoint }}</td>
     </tr>
-    {%endfor%}
+
+
+    {% endfor %}
     </tbody>
 </table>
 </div>

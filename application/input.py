@@ -1,50 +1,64 @@
 from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm
-from wtforms_alchemy import QuerySelectMultipleField
+from wtforms.fields import DateField, TimeField, SelectMultipleField, StringField
+from wtforms.validators import InputRequired, Length
+from wtforms_alchemy import QuerySelectMultipleField, WeekDaysField
 from wtforms import widgets
+from datetime import datetime
 from .models import Container, Thermometer
 from . import db
 
 input = Blueprint('input', __name__)
 
+
 @input.route('/task')
 def tasks():
-    containers = [container.__dict__ for container in Container.query.all()]
     return render_template(
         'control.html',
-        containers=containers,
+        containers=(containers := Container.query.all()),
         len=len(containers)
     )
 
 
-class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
-    option_widget = widgets.CheckboxInput()
+class NameChangeForm(FlaskForm):
+    given_name = StringField('given_name')
+    thermometer_select = SelectMultipleField('thermometer_select')
 
 
-class MyForm(FlaskForm):
-    choices = QuerySelectMultipleFieldWithCheckboxes("Choices")
-
-
-@input.route("/task/<container>", methods=["POST", "GET"])
-def new_task(container):
-    parent = Container.query.get(container)
-    form = MyForm(data={"choices": parent.children})
-    form.choices.query = Thermometer.query.all()
-    new_given_name = request.form.get('the_container_given_name')
-    if form.validate_on_submit():
-        parent.children.clear()
-        parent.given_name = new_given_name
-        parent.children.extend(form.choices.data)
-        db.session.commit()
-
-    other_containers = [cont.__dict__ for cont in Container.query.all() if cont is not parent]
-
+def render_task_template(
+        all_containers: list[Container],
+        task_container: Container,
+        thermometers: list[Thermometer],
+        form: FlaskForm
+    ):
     return render_template(
-        "task.html",
+        "new_task.html",
         form=form,
-        the_container=parent.__dict__,
-        other_containers=other_containers,
-        others_len=len(other_containers)
+        task_container=task_container,
+        containers=all_containers,
+        thermometers=thermometers,
+    )
+
+
+@input.route("/task/<string:container>", methods=["POST", "GET"])
+def new_task(container: str):
+    all_containers = Container.query.all()
+
+    the_container = [cont for cont in all_containers if cont.name == container].pop()
+    all_thermometers = Thermometer.query.all()
+    form = NameChangeForm()
+    new_name = request.form.get('given_name')
+    measures = request.form.get('thermometer_select')
+    if form.validate_on_submit():
+        if new_name:
+            the_container.given_name = new_name
+            db.session.commit()
+        print(measures)
+
+    return render_task_template(
+        form=form,
+        all_containers=all_containers,
+        task_container=the_container,
+        thermometers=all_thermometers
     )
 

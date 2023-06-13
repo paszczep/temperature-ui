@@ -18,7 +18,7 @@ class Container(db.Model):
     setpoint = db.Column(db.String(100))
     database_time = db.Column(db.String(100))
 
-    children = db.relationship("Thermometer", secondary="container_thermometer", back_populates="parents")
+    measures = db.relationship("Thermometer", secondary="control_measure", back_populates="control")
 
 
 class Thermometer(db.Model):
@@ -28,18 +28,19 @@ class Thermometer(db.Model):
     measure_time = db.Column(db.String(100))
     database_time = db.Column(db.String(100))
 
-    parents = db.relationship("Container", secondary="container_thermometer", back_populates="children")
+    control = db.relationship("Container", secondary="control_measure", back_populates="measures")
 
     def __str__(self):
         return self.device_name
 
 
 db.Table(
-    "container_thermometer",
-    db.Column("parent_id", db.ForeignKey("container.name"), primary_key=True),
-    db.Column("child_id", db.ForeignKey("thermometer.device_id"), primary_key=True)
+    "control_measure",
+    db.Column("control_id", db.ForeignKey("container.name"), primary_key=True),
+    db.Column("measure_id", db.ForeignKey("thermometer.device_id"), primary_key=True)
 )
 
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    control = db.Column(db.String(100))

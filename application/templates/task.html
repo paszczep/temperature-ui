@@ -2,6 +2,19 @@
 
 {% block content %}
 <form method="POST">
+    <div class="card">
+        <div class="tabs is-centered">
+            <ul>
+                    {%for i in range(0, all_len)%}
+                <li>
+                    <a href="{{ url_for('input.new_task', container=all_containers[i]['name']) }}">
+                       {{ all_containers[i]['given_name'] }}
+                    </a>
+                </li>
+                    {%endfor%}
+            </ul>
+        </div>
+    </div>
 <div class="tile is-ancestor is-vertical">
     <div class="tile is-child columns">
         <div class="column is-narrow">
@@ -12,24 +25,19 @@
                         Containers
                     </div>
 
-                    <div class="tile center button is-rounded is-link is-outlined is-large">
+                    <div class="tile center">
                         <a href="{{  url_for('input.tasks')  }}">
-                            <div class="tile is-size-3">
-                            <span class="icon is-large">
-                                <ion-icon name="arrow-back-outline"></ion-icon>
-                            </span>
-                            </div>
+                            <button class="button is-link is-outlined is-large">
+                                <span class="icon is-large">
+                                    <ion-icon name="arrow-back-outline"></ion-icon>
+                                </span>
+                            </button>
                         </a>
                     </div>
 
                 </div>
                 <div class="tile is-parent buttons is-vertical">
-                    {%for i in range(0, others_len)%}
-                    <a href="{{ url_for('input.new_task', container=other_containers[i]['name']) }}">
-                        <div class="tile button is-link is-outlined">{{ other_containers[i]['given_name'] }}
-                        </div>
-                    </a>
-                    {%endfor%}
+
                 </div>
             </div>
 
@@ -54,24 +62,29 @@
             <div class="tile is-ancestor">
                 <div class="tile box has-background-black">
                     {{ form.csrf_token }}
-                    {{ form.choices }}
+                    {{ form.measure_choices }}
                 </div>
 
             </div>
         </div>
-        <div class="tile is-ancestor">
-            <div class="column">
-            <div class="tile">
-                <div class="tag">puste</div>
 
+        <div class="column section">
+            <div class=" tile is-ancestor">
+            <div class="tile is-parent is-vertical center">
+                <div class="tile is-child">
+                    {{ form.csrf_token }}
+                    {{ form.date_choice }}
+                    {{ form.time_choice }}
+                </div>
+            </div>
+        <div class="column section">
+            <div class="tile">
+                <div class="tag is-large">puste</div>
             </div>
         </div>
-        <div class="column ">
-            <div class="tag">puste</div>
-        </div>
 
         </div>
-
+        </div>
     </div>
 
     <div class="tile columns">
