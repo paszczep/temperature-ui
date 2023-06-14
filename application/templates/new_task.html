@@ -8,7 +8,7 @@
 {{ form.csrf_token }}
 
 
-        <tabs class="tile tabs is-centered is-toggle">
+        <div class="tabs tile tabs is-centered is-toggle">
             <ul>
                     {% for cont in containers %}
                     {% if cont == task_container: %}
@@ -22,35 +22,40 @@
                     {% endif %}
                     {% endfor %}
             </ul>
-        </tabs>
+        </div>
 
 
-    <tile class="tile is-child is-vertical is-link">
+    <div class="tile is-child is-vertical is-link">
 <!--    text input new given_name -->
-        <tile class="tile section">
+        <div class="control block">
            <input
-                   class="input is-link"
+                   class="input"
                    type="text"
                    name="given_name"
-                   value="{{ request.form.given_name }}"
-                   placeholder="{{ task_container.given_name }}">
-        </tile>
-<!--        thermometer checkboxes-->
+                   value="{{ task_container.given_name }}">
+        </div>
 
-        <tile class="tile is-vertical box">
-            {% for therm in thermometers %}
+<!--        thermometer checkboxes form-->
+        <div class="column tile is-vertical box">
+
+            {% for choice in form.measure_selection.choices %}
             <label class="checkbox">
-                <input type="checkbox" name="thermometer_select" value="{{ therm.device_id }}">
-                {{therm.device_name}}
+                <input
+                        type="checkbox"
+                        name="measure_selection"
+                        value="{{ choice.device_id }}">
+                {{ choice.device_name }}
             </label>
-            {% endfor %}
-        </tile>
-    </tile>
-<!-- go buttons -->
-    <buttons class="tile section buttons">
-        <button class="button is-link is-inverted is-large" type="submit">Go!</button>
 
-    </buttons>
+
+            {% endfor %}
+        </div>
+
+    </div>
+<!-- go buttons -->
+    <div class="buttons tile section buttons">
+        <button class="button is-link is-inverted is-large" type="submit">Go!</button>
+    </div>
 
 
     </form>
