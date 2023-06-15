@@ -24,7 +24,7 @@
         </div>
 
 
-    <div class="tile is-parent is-vertical is-link">
+    <div class="tile is-child is-vertical is-link">
 <!--    text input new given_name -->
         <div class="block">
             <div class="p is-size-3">{{ task_container.name }}</div>
@@ -34,14 +34,11 @@
         </div>
 
 <!--        thermometer checkboxes form-->
-        <div class="column tile is-vertical box">
-            <div class="select is-multiple">
-                <select multiple size="7">
-                    {% for choice in form.measure_selection.choices %}
-                        <option value="{{choice.device_id}}">{{choice.device_name}}</option>
-                    {% endfor %}
-                </select>
+        <div class="tile is-child column">
+            <div class="tile is-vertical box">
+                {{  form.measure_selection }}
             </div>
+
         </div>
 
     </div>

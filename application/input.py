@@ -27,7 +27,7 @@ class ThermometerSelect(QuerySelectMultipleField):
 
 class TaskForm(FlaskForm):
     given_name = StringField('given_name', validators=[InputRequired()])
-    measure_selection = ThermometerSelect('choices')
+    measure_selection = ThermometerSelect('measure_selection')
     submit = SubmitField('Go!')
 
 
@@ -49,17 +49,16 @@ def new_task(container: str):
     all_containers = Container.query.all()
     task_container = [cont for cont in all_containers if cont.name == container].pop()
 
-    form = TaskForm(data={"choices": task_container.measures})
-    all_choices = Thermometer.query.all()
-    form.measure_selection.choices = all_choices
-    print(all_choices, form.__dict__, sep='\n\n\n')
+    form = TaskForm(data={"measure_selection": task_container.measures})
+    form.measure_selection.query = Thermometer.query.all()
 
     if form.submit():
         new_name = form.given_name.data
         if new_name:
             task_container.given_name = new_name
         task_container.measures.clear()
-        task_container.measures.extend(form.measure_selection.choices)
+        measure_choices = form.measure_selection.data
+        task_container.measures.extend(measure_choices)
         db.session.commit()
 
     return render_task_template(
