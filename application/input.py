@@ -26,8 +26,9 @@ class ThermometerSelect(QuerySelectMultipleField):
 
 
 class TaskForm(FlaskForm):
-    given_name = StringField('given_name')
+    given_name = StringField('given_name', validators=[InputRequired()])
     measure_selection = ThermometerSelect('choices')
+    submit = SubmitField('Go!')
 
 
 def render_task_template(
@@ -46,25 +47,24 @@ def render_task_template(
 @input.route("/task/<string:container>", methods=["POST", "GET"])
 def new_task(container: str):
     all_containers = Container.query.all()
-    the_container = [cont for cont in all_containers if cont.name == container].pop()
+    task_container = [cont for cont in all_containers if cont.name == container].pop()
 
-    form = TaskForm(data={"choices": the_container.measures})
-    form.measure_selection.choices = Thermometer.query.all()
+    form = TaskForm(data={"choices": task_container.measures})
+    all_choices = Thermometer.query.all()
+    form.measure_selection.choices = all_choices
+    print(all_choices, form.__dict__, sep='\n\n\n')
 
-    new_name = form.given_name.data
-    new_selection = form.measure_selection.data
-    print(new_name)
-    if form.validate_on_submit():
-
+    if form.submit():
+        new_name = form.given_name.data
         if new_name:
-            the_container.given_name = new_name
-        the_container.measures.clear()
-        the_container.measures.extend(new_selection)
+            task_container.given_name = new_name
+        task_container.measures.clear()
+        task_container.measures.extend(form.measure_selection.choices)
         db.session.commit()
 
     return render_task_template(
         form=form,
         all_containers=all_containers,
-        task_container=the_container,
+        task_container=task_container,
     )
 

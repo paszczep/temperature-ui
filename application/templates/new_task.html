@@ -5,10 +5,9 @@
 <div class="card hero box is-link tile is-ancestor is-vertical">
 <!--    navigation tabs-->
     <form method="POST">
-{{ form.csrf_token }}
 
 
-        <div class="tabs tile tabs is-centered is-toggle">
+        <div class="tabs tile is-centered is-toggle">
             <ul>
                     {% for cont in containers %}
                     {% if cont == task_container: %}
@@ -25,38 +24,35 @@
         </div>
 
 
-    <div class="tile is-child is-vertical is-link">
+    <div class="tile is-parent is-vertical is-link">
 <!--    text input new given_name -->
-        <div class="control block">
-           <input
-                   class="input"
-                   type="text"
-                   name="given_name"
-                   value="{{ task_container.given_name }}">
+        <div class="block">
+            <div class="p is-size-3">{{ task_container.name }}</div>
+            <div class="tile is-4">
+           {{ form.given_name(class="input", value=task_container.given_name) }}
+            </div>
         </div>
 
 <!--        thermometer checkboxes form-->
         <div class="column tile is-vertical box">
-
-            {% for choice in form.measure_selection.choices %}
-            <label class="checkbox">
-                <input
-                        type="checkbox"
-                        name="measure_selection"
-                        value="{{ choice.device_id }}">
-                {{ choice.device_name }}
-            </label>
-
-
-            {% endfor %}
+            <div class="select is-multiple">
+                <select multiple size="7">
+                    {% for choice in form.measure_selection.choices %}
+                        <option value="{{choice.device_id}}">{{choice.device_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
 
     </div>
 <!-- go buttons -->
-    <div class="buttons tile section buttons">
-        <button class="button is-link is-inverted is-large" type="submit">Go!</button>
+    <div class="tile is-child buttons">
+        <div class="tile">
+            {{ form.submit(class="button is-link is-inverted is-large") }}
+        </div>
     </div>
 
+{{ form.csrf_token }}
 
     </form>
 </div>
