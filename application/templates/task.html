@@ -21,10 +21,56 @@
 
 <!--form -->
 <form method="POST">
-        {{ form.csrf_token }}
-        {{ form.name(class="input") }}
-        {{ form.choices }}
-        {{ form.submit(class="button is-link is-inverted is-large") }}
+{{ form.csrf_token }}
+
+<!--    name -->
+<div class="field">{{ form.name(class="input") }}</div>
+<!--    thermometer choice -->
+<div class="field">{{ form.choices }}</div>
+<div class="tile columns">
+    <div class="column tile is-2 center">
+        <ion-icon class="tile icon is-medium" name="play-outline"></ion-icon>
+    </div>
+<!--    date  -->
+<div class="column is-narrow tile">{{ form.date(class="input") }}</div>
+<!--    time -->
+<div class="column tile">
+    <div class="control has-icons-right">
+        {{ form.time(class="input") }}
+         <span class="icon is-right">
+                <ion-icon name="time-outline"></ion-icon>
+            </span>
+    </div></div></div>
+<!--    time delta-->
+    <div class="field columns tile">
+        <div class="column  tile is-2 center">
+            <ion-icon class="tile icon is-medium is-3" name="timer-outline"></ion-icon>
+        </div>
+        <div class="tile column">
+        <div class="control has-icons-right">
+            {{ form.hours(class="input") }}
+            <span class="icon is-right"><p>h</p></span>
+        </div>
+        </div>
+        <div class="tile column">
+        <div class="control has-icons-right">
+            {{ form.minutes(class="input") }}
+            <span class="icon is-right"><p>min</p></span>
+        </div></div>
+    </div>
+<!-- temperature settings-->
+    <div class="tile">
+        <ion-icon class="icon tile is-medium is-3" name="thermometer-outline"></ion-icon>
+        <div class="tile field control has-icons-right">
+            {{ form.temperature(class="input") }}
+            <span class="icon is-right">
+                <p>°C</p>
+            </span>
+        </div>
+    </div>
+{{ form.submit(class="button is-link is-inverted is-large") }}
+
+
 </form>
 </div>
 {% endblock %}

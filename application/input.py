@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm
-from wtforms.fields import DateField, TimeField, SelectMultipleField, StringField, SubmitField
+from wtforms.fields import DateField, TimeField, SelectMultipleField, StringField, SubmitField, IntegerField
 from wtforms.validators import InputRequired, Length
 from wtforms_alchemy import QuerySelectMultipleField, WeekDaysField
 from wtforms import widgets
@@ -25,9 +25,22 @@ class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 
+class MinutesDelta(IntegerField):
+    widget = widgets.NumberInput(step=15, min=0, max=45)
+
+
+class HoursDelta(IntegerField):
+    widget = widgets.NumberInput(step=1, min=0, max=24)
+
+
 class MyForm(FlaskForm):
     name = StringField('Name')
     choices = QuerySelectMultipleFieldWithCheckboxes("Choices")
+    date = DateField('Date')
+    time = TimeField('Time')
+    minutes = MinutesDelta('Minutes')
+    hours = HoursDelta('Hours')
+    temperature = IntegerField('Temperature')
     submit = SubmitField('Go!')
 
 
@@ -35,9 +48,17 @@ class MyForm(FlaskForm):
 def task(container):
     task_container = Container.query.get(container)
     all_containers = Container.query.all()
+
+    now = datetime.now()
+
     data = {
         "name": task_container.given_name,
-        "choices": task_container.measures
+        "choices": task_container.measures,
+        "date": now.date(),
+        "time": now.time(),
+        "hours": 0,
+        "minutes": 0,
+        "temperature": 0
     }
 
     form = MyForm(data=data)
