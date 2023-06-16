@@ -1,97 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="POST">
-    <div class="card">
-        <div class="tabs is-centered">
+<div class="card box">
+<!--navbar-->
+<div class="tabs tile is-centered is-toggle">
             <ul>
-                    {%for i in range(0, all_len)%}
-                <li>
-                    <a href="{{ url_for('input.new_task', container=all_containers[i]['name']) }}">
-                       {{ all_containers[i]['given_name'] }}
-                    </a>
+                    {% for cont in all_containers %}
+                    {% if cont == task_container: %}
+                <li class="is-active">
+                    <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
                 </li>
-                    {%endfor%}
+                    {% else %}
+                <li>
+                    <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
+                </li>
+                    {% endif %}
+                    {% endfor %}
             </ul>
         </div>
-    </div>
-<div class="tile is-ancestor is-vertical">
-    <div class="tile is-child columns">
-        <div class="column is-narrow">
-            <div class="tile is-ancestor box">
-                <div class="tile is-parent is-vertical center">
 
-                    <div class="tile is-size-3 has-text-link">
-                        Containers
-                    </div>
-
-                    <div class="tile center">
-                        <a href="{{  url_for('input.tasks')  }}">
-                            <button class="button is-link is-outlined is-large">
-                                <span class="icon is-large">
-                                    <ion-icon name="arrow-back-outline"></ion-icon>
-                                </span>
-                            </button>
-                        </a>
-                    </div>
-
-                </div>
-                <div class="tile is-parent buttons is-vertical">
-
-                </div>
-            </div>
-
-        </div>
-        <div class="column">
-            <div class="tile is-child is-vertical">
-                <div class="tile is-child">
-                    <h1 class="title is-size-2 has-text-grey"> {{ the_container['name'] }}</h1>
-                </div>
-                <div class="tile is-child">
-                    <input class="input is-large is-link" type="text" name="the_container_given_name"
-                           placeholder="{{ the_container['given_name'] }}">
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-
-    <div class="tile is-child columns">
-        <div class="column is-narrow">
-            <div class="tile is-ancestor">
-                <div class="tile box has-background-black">
-                    {{ form.csrf_token }}
-                    {{ form.measure_choices }}
-                </div>
-
-            </div>
-        </div>
-
-        <div class="column section">
-            <div class=" tile is-ancestor">
-            <div class="tile is-parent is-vertical center">
-                <div class="tile is-child">
-                    {{ form.csrf_token }}
-                    {{ form.date_choice }}
-                    {{ form.time_choice }}
-                </div>
-            </div>
-        <div class="column section">
-            <div class="tile">
-                <div class="tag is-large">puste</div>
-            </div>
-        </div>
-
-        </div>
-        </div>
-    </div>
-
-    <div class="tile columns">
-        <div class="column is-4 is-offset-8 box">
-            <button class="button is-info is-large">Save</button>
-        </div>
-    </div>
-</div>
+<!--form -->
+<form method="POST">
+        {{ form.csrf_token }}
+        {{ form.name(class="input") }}
+        {{ form.choices }}
+        {{ form.submit(class="button is-link is-inverted is-large") }}
 </form>
+</div>
 {% endblock %}

@@ -5,6 +5,7 @@
 <div class="card hero box is-link tile is-ancestor is-vertical">
 <!--    navigation tabs-->
     <form method="POST">
+{{ form.csrf_token }}
 
 
         <div class="tabs tile is-centered is-toggle">
@@ -24,24 +25,20 @@
         </div>
 
 
-    <div class="tile is-child is-vertical is-link">
+    <div class="tile is-vertical">
 <!--    text input new given_name -->
-        <div class="block">
-            <div class="p is-size-3">{{ task_container.name }}</div>
-            <div class="tile is-4">
-           {{ form.given_name(class="input", value=task_container.given_name) }}
+            <div class="tile is-child p is-size-3">{{ task_container.name }}</div>
+            <div class="tile is-child is-4">
+           {{ form.given_name(class="input") }}
             </div>
-        </div>
 
 <!--        thermometer checkboxes form-->
-        <div class="tile is-child column">
+        <div class="tile is-child">
             <div class="tile is-vertical box">
-                {{  form.measure_selection }}
+                {{  form.selection }}
             </div>
 
         </div>
-
-    </div>
 <!-- go buttons -->
     <div class="tile is-child buttons">
         <div class="tile">
@@ -49,7 +46,8 @@
         </div>
     </div>
 
-{{ form.csrf_token }}
+    </div>
+
 
     </form>
 </div>

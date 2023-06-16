@@ -20,50 +20,36 @@ def tasks():
     )
 
 
-class ThermometerSelect(QuerySelectMultipleField):
+class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
 
-class TaskForm(FlaskForm):
-    given_name = StringField('given_name', validators=[InputRequired()])
-    measure_selection = ThermometerSelect('measure_selection')
+class MyForm(FlaskForm):
+    name = StringField('Name')
+    choices = QuerySelectMultipleFieldWithCheckboxes("Choices")
     submit = SubmitField('Go!')
 
 
-def render_task_template(
-        all_containers: list[Container],
-        task_container: Container,
-        form: FlaskForm
-    ):
-    return render_template(
-        "new_task.html",
-        form=form,
-        task_container=task_container,
-        containers=all_containers,
-    )
-
-
-@input.route("/task/<string:container>", methods=["POST", "GET"])
-def new_task(container: str):
+@input.route("/task/<container>", methods=["POST", "GET"])
+def task(container):
+    task_container = Container.query.get(container)
     all_containers = Container.query.all()
-    task_container = [cont for cont in all_containers if cont.name == container].pop()
+    data = {
+        "name": task_container.given_name,
+        "choices": task_container.measures
+    }
 
-    form = TaskForm(data={"measure_selection": task_container.measures})
-    form.measure_selection.query = Thermometer.query.all()
+    form = MyForm(data=data)
+    form.choices.query = Thermometer.query.all()
 
-    if form.submit():
-        new_name = form.given_name.data
-        if new_name:
-            task_container.given_name = new_name
+    if form.validate_on_submit():
         task_container.measures.clear()
-        measure_choices = form.measure_selection.data
-        task_container.measures.extend(measure_choices)
+        task_container.measures.extend(form.choices.data)
         db.session.commit()
 
-    return render_task_template(
+    return render_template(
+        "task.html",
         form=form,
-        all_containers=all_containers,
         task_container=task_container,
-    )
-
+        all_containers=all_containers)
