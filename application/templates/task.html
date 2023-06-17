@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="card box">
+<div class="column is-three-fifths card box">
 <!--navbar-->
 <div class="tabs tile is-centered is-toggle">
             <ul>
@@ -21,56 +21,82 @@
 
 <!--form -->
 <form method="POST">
-{{ form.csrf_token }}
 
+<columns class="columns is-multiline">
+    <column class="column is-full block">
 <!--    name -->
-<div class="field">{{ form.name(class="input") }}</div>
+{{ form.name(class="input block") }}
+    </column>
+<column class="column is-narrow block">
 <!--    thermometer choice -->
-<div class="field">{{ form.choices }}</div>
-<div class="tile columns">
-    <div class="column tile is-2 center">
-        <ion-icon class="tile icon is-medium" name="play-outline"></ion-icon>
-    </div>
+            {{ form.choices }}
+</column>
+<column class="column block">
+<!--            task parameters -->
+
+<!--    task parameters-->
+<div class="tile is-parent">
+<!--    play icon -->
+<ion-icon class="tile is-2 icon is-medium" name="play-outline"></ion-icon>
 <!--    date  -->
-<div class="column is-narrow tile">{{ form.date(class="input") }}</div>
+{{ form.date(class="input tile") }}
+    <div>&nbsp;</div>
 <!--    time -->
-<div class="column tile">
-    <div class="control has-icons-right">
+    <div class="control has-icons-right tile">
         {{ form.time(class="input") }}
          <span class="icon is-right">
                 <ion-icon name="time-outline"></ion-icon>
             </span>
-    </div></div></div>
+    </div>
+</div>
 <!--    time delta-->
-    <div class="field columns tile">
-        <div class="column  tile is-2 center">
-            <ion-icon class="tile icon is-medium is-3" name="timer-outline"></ion-icon>
-        </div>
-        <div class="tile column">
-        <div class="control has-icons-right">
+<div class="tile is-parent">
+    <ion-icon class="tile is-2 icon is-medium" name="timer-outline"></ion-icon>
+
+        <div class="tile control has-icons-right">
             {{ form.hours(class="input") }}
             <span class="icon is-right"><p>h</p></span>
         </div>
-        </div>
-        <div class="tile column">
-        <div class="control has-icons-right">
+        <div>&nbsp;</div>
+       <div class="tile control has-icons-right">
             {{ form.minutes(class="input") }}
             <span class="icon is-right"><p>min</p></span>
-        </div></div>
-    </div>
+        </div>
+</div>
 <!-- temperature settings-->
-    <div class="tile">
-        <ion-icon class="icon tile is-medium is-3" name="thermometer-outline"></ion-icon>
-        <div class="tile field control has-icons-right">
-            {{ form.temperature(class="input") }}
+    <div class="tile is-parent">
+        <ion-icon class="icon field tile is-2 is-medium" name="thermometer-outline"></ion-icon>
+
+        <div class="tile control has-icons-right">
+            {{ form.t_start(class="input") }}
             <span class="icon is-right">
                 <p>°C</p>
             </span>
         </div>
-    </div>
-{{ form.submit(class="button is-link is-inverted is-large") }}
+                <div>&nbsp;</div>
 
+        <div class="tile control has-icons-right">
+            {{ form.t_max(class="input") }}
+            <span class="icon is-right">
+                <p>°C</p>
+            </span>
+        </div>
+                <div>&nbsp;</div>
 
+        <div class="tile control has-icons-right">
+            {{ form.t_freeze(class="input") }}
+            <span class="icon is-right">
+                <p>°C</p>
+            </span>
+        </div>
+        </div>
+        </column>
+    </columns>
+
+{{ form.csrf_token }}
+    <column class="column is-narrow is-centered">
+{{ form.submit(class="button is-link is-large") }}
+</column>
 </form>
 </div>
 {% endblock %}
