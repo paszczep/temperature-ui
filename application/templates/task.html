@@ -1,102 +1,124 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-three-fifths card box">
-<!--navbar-->
-<div class="tabs tile is-centered is-toggle">
-            <ul>
-                    {% for cont in all_containers %}
-                    {% if cont == task_container: %}
-                <li class="is-active">
-                    <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
-                </li>
-                    {% else %}
-                <li>
-                    <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
-                </li>
-                    {% endif %}
-                    {% endfor %}
-            </ul>
-        </div>
+<div class="column is-9 card box">
+    <!--navbar-->
+    <div class="tabs tile is-centered is-toggle">
+        <ul>
+            {% for cont in all_containers %}
+            {% if cont == task_container: %}
+            <li class="is-active">
+                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
 
-<!--form -->
-<form method="POST">
+    <!--    form -->
+    <form method="POST">
 
-<columns class="columns is-multiline">
-    <column class="column is-full block">
-<!--    name -->
-{{ form.name(class="input block") }}
-    </column>
-<column class="column is-narrow block">
-<!--    thermometer choice -->
-            {{ form.choices }}
-</column>
-<column class="column block">
-<!--            task parameters -->
+        <div class="columns is-desktop level">
 
-<!--    task parameters-->
-<div class="tile is-parent">
-<!--    play icon -->
-<ion-icon class="tile is-2 icon is-medium" name="play-outline"></ion-icon>
-<!--    date  -->
-{{ form.date(class="input tile") }}
-    <div>&nbsp;</div>
-<!--    time -->
-    <div class="control has-icons-right tile">
-        {{ form.time(class="input") }}
-         <span class="icon is-right">
+            <div class="column is-7 section tile is-parent is-vertical">
+
+                <!--    task parameters-->
+                <div class="tile is-parent">
+                    <!--    name -->
+                    <ion-icon class="tile is-2 icon is-medium" name="pricetag-outline"></ion-icon>
+                    {{ form.name(class="input tile is-6") }}
+                </div>
+                <div class="tile is-parent">
+                    <!--    play icon -->
+                    <ion-icon class="tile is-2 icon is-medium" name="play-outline"></ion-icon>
+                    <!--    date  -->
+                    {{ form.date(class="input tile is-4") }}
+                    <div>&nbsp;&nbsp;</div>
+                    <!--    time -->
+                    <div class="control has-icons-right tile is-4">
+                        {{ form.time(class="input") }}
+                        <span class="icon is-right">
                 <ion-icon name="time-outline"></ion-icon>
             </span>
-    </div>
-</div>
-<!--    time delta-->
-<div class="tile is-parent">
-    <ion-icon class="tile is-2 icon is-medium" name="timer-outline"></ion-icon>
+                    </div>
+                </div>
+                <!--    time delta-->
+                <div class="tile is-parent">
+                    <!--    timer icon -->
+                    <ion-icon class="tile is-2 icon is-medium" name="timer-outline"></ion-icon>
+                    <!--    hours -->
+                    <div class="tile is-3 control has-icons-right">
+                        {{ form.hours(class="input") }}
+                        <span class="icon is-right"><p>h</p></span>
+                    </div>
 
-        <div class="tile control has-icons-right">
-            {{ form.hours(class="input") }}
-            <span class="icon is-right"><p>h</p></span>
-        </div>
-        <div>&nbsp;</div>
-       <div class="tile control has-icons-right">
-            {{ form.minutes(class="input") }}
-            <span class="icon is-right"><p>min</p></span>
-        </div>
-</div>
-<!-- temperature settings-->
-    <div class="tile is-parent">
-        <ion-icon class="icon field tile is-2 is-medium" name="thermometer-outline"></ion-icon>
+                    <!--    time colon -->
+                    <span class="is-size-4">&nbsp;:&nbsp;</span>
 
-        <div class="tile control has-icons-right">
-            {{ form.t_start(class="input") }}
-            <span class="icon is-right">
-                <p>°C</p>
-            </span>
-        </div>
-                <div>&nbsp;</div>
+                    <!--    minutes -->
+                    <div class="tile is-3 control has-icons-right">
+                        {{ form.minutes(class="input") }}
+                        <span class="icon is-right"><p>min</p></span>
+                    </div>
+                </div>
 
-        <div class="tile control has-icons-right">
-            {{ form.t_max(class="input") }}
-            <span class="icon is-right">
-                <p>°C</p>
-            </span>
-        </div>
-                <div>&nbsp;</div>
+                <!--    temperature settings-->
+                <div class="tile is-parent">
+                    <ion-icon class="icon tile is-2 is-medium" name="thermometer-outline"></ion-icon>
 
-        <div class="tile control has-icons-right">
-            {{ form.t_freeze(class="input") }}
-            <span class="icon is-right">
-                <p>°C</p>
-            </span>
-        </div>
-        </div>
-        </column>
-    </columns>
+                    <!--    start temperature-->
+                    <div class="tile is-vertical">
+                        <div class="tile is-parent stick">
+                            <ion-icon name="play-forward-sharp" class="icon is-medium tile is-2"></ion-icon>
+                            <div class="tile is-4 control has-icons-right">
+                                {{ form.t_start(class="input") }}
+                                <span class="icon is-right"><p>°C</p></span>
+                            </div>
+                        </div>
 
-{{ form.csrf_token }}
-    <column class="column is-narrow is-centered">
-{{ form.submit(class="button is-link is-large") }}
-</column>
-</form>
+                        <!-- max temperature -->
+                        <div class="tile is-parent stick">
+                            <div class="tile  icon is-2 center"><p class="is-size-5">max</p></div>
+                            <div class="tile is-4 control has-icons-right">
+                                {{ form.t_max(class="input") }}
+                                <span class="icon is-right"><p>°C</p></span>
+                            </div>
+                        </div>
+
+                        <!-- freezing temperature -->
+                        <div class="tile is-parent stick">
+                            <ion-icon name="snow-outline" class="icon is-medium tile is-2"></ion-icon>
+                            <div class=" tile is-4 control has-icons-right">
+                                {{ form.t_freeze(class="input") }}
+                                <span class="icon is-right"><p>°C</p></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- measurment choices -->
+            <div class="column section tile is-parent">
+                <div class="icon tile is-child">
+                    <ion-icon name="eyedrop-outline" class="icon is-large is-2"></ion-icon>
+                </div>
+                <div class="tile is-child is-10">
+                    {{ form.choices(class="tile is-child is-vertical") }}
+                </div>
+            </div>
+        </div>
+
+        <div class="level">
+            <div class="column is-offset-10">
+                {{ form.submit(class="button is-link is-large") }}
+            </div>
+        </div>
+        {{ form.csrf_token }}
+    </form>
 </div>
 {% endblock %}

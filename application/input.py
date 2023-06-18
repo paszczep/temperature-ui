@@ -23,11 +23,11 @@ def form_data(task_container: Container) -> dict:
         "choices": task_container.measures,
         "date": now.date(),
         "time": now.time(),
-        "hours": 0,
+        "hours": 6,
         "minutes": 0,
-        "t_start": 0,
-        "t_max": 0,
-        "t_freeze": 0
+        "t_start": 20,
+        "t_max": 35,
+        "t_freeze": -1
     }
 
 

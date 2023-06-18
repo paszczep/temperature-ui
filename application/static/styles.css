@@ -13,3 +13,7 @@
     border-style: solid;
     border-width: thin;
 }
+
+.stick {
+    display: inline-block;
+}
