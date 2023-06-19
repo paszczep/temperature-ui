@@ -19,15 +19,16 @@ def tasks():
 def form_data(task_container: Container) -> dict:
     now = datetime.now()
     return {
-        "name": task_container.given_name,
-        "choices": task_container.measures,
-        "date": now.date(),
-        "time": now.time(),
-        "hours": 6,
-        "minutes": 0,
-        "t_start": 20,
-        "t_max": 35,
-        "t_freeze": -1
+            "name": task_container.label,
+            "choices": task_container.measures,
+            "date": now.date(),
+            "time": now.time(),
+            "hours": 6,
+            "minutes": 0,
+            "t_start": 40,
+            "t_max": 35,
+            "t_min": 30,
+            "t_freeze": -20
     }
 
 
@@ -42,6 +43,7 @@ def task(container):
     if form.validate_on_submit():
         task_container.measures.clear()
         task_container.measures.extend(form.choices.data)
+        task_container.label = form.name.data
         db.session.commit()
 
     return render_template(

@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import DateField, TimeField, StringField, SubmitField, IntegerField
+from wtforms.validators import Length, InputRequired
 from wtforms_alchemy import QuerySelectMultipleField
 from wtforms import widgets
 
@@ -14,11 +15,11 @@ class MinutesDelta(IntegerField):
 
 
 class HoursDelta(IntegerField):
-    widget = widgets.NumberInput(step=1, min=0, max=24)
+    widget = widgets.NumberInput(step=1, min=0, max=48)
 
 
 class TaskForm(FlaskForm):
-    name = StringField('Name')
+    name = StringField('Name', validators=[Length(min=3, max=16)])
     choices = QuerySelectMultipleFieldWithCheckboxes("Choices")
     date = DateField('Date')
     time = TimeField('Time')
@@ -26,6 +27,7 @@ class TaskForm(FlaskForm):
     hours = HoursDelta('Hours')
     t_start = IntegerField('Start temperature')
     t_max = IntegerField('Max temperature')
+    t_min = IntegerField('Min temperature')
     t_freeze = IntegerField('Freeze temperature')
     submit = SubmitField('Go!')
 

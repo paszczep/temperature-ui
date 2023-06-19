@@ -30,7 +30,8 @@
                 <div class="tile is-parent">
                     <!--    name -->
                     <ion-icon class="tile is-2 icon is-medium" name="pricetag-outline"></ion-icon>
-                    {{ form.name(class="input tile is-6") }}
+                    {{ form.name(class="input tile is-4") }}
+                    <div class="tile is-3 center">{{ task_container.name}}</div>
                 </div>
                 <div class="tile is-parent">
                     <!--    play icon -->
@@ -76,6 +77,15 @@
                             <ion-icon name="play-forward-sharp" class="icon is-medium tile is-2"></ion-icon>
                             <div class="tile is-4 control has-icons-right">
                                 {{ form.t_start(class="input") }}
+                                <span class="icon is-right"><p>°C</p></span>
+                            </div>
+                        </div>
+
+                        <!-- min temperature -->
+                        <div class="tile is-parent stick">
+                            <div class="tile  icon is-2 center"><p class="is-size-5">min</p></div>
+                            <div class="tile is-4 control has-icons-right">
+                                {{ form.t_min(class="input") }}
                                 <span class="icon is-right"><p>°C</p></span>
                             </div>
                         </div>
