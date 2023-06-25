@@ -6,8 +6,6 @@
     <tr>
         <th class="is-size-5 has-text-link">given name</th>
         <th class="is-size-5 has-text-link">id</th>
-        <th class="is-size-5 has-text-link">status</th>
-        <th class="is-size-5 has-text-link">setpoint</th>
     </tr>
     </thead>
     <tbody>
@@ -16,12 +14,10 @@
     <tr>
         <td>
         <a href="{{ url_for('input.task', container=container.name) }}">
-                {{ container.given_name }}
+                {{ container.label }}
         </a>
         </td>
         <td>{{ container.name }}</td>
-        <td>{{ container.power }}</td>
-        <td>{{ container.setpoint }}</td>
     </tr>
 
 

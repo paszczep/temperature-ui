@@ -8,11 +8,11 @@
             {% for cont in all_containers %}
             {% if cont == task_container: %}
             <li class="is-active">
-                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
+                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
             </li>
             {% else %}
             <li>
-                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.given_name }}</a>
+                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
             </li>
             {% endif %}
             {% endfor %}
