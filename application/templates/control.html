@@ -6,6 +6,7 @@
     <tr>
         <th class="is-size-5 has-text-link">given name</th>
         <th class="is-size-5 has-text-link">id</th>
+        <th class="is-size-5 has-text-link">task</th>
     </tr>
     </thead>
     <tbody>
@@ -18,6 +19,7 @@
         </a>
         </td>
         <td>{{ container.name }}</td>
+        <td>{% if container.task %}{{ container.task[0].status }}{% else %} - {% endif %}</td>
     </tr>
 
 

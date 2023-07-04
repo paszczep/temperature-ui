@@ -14,6 +14,6 @@
     border-width: thin;
 }
 
-.stick {
-    display: inline-block;
+.inline {
+    white-space: nowrap;
 }

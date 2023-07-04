@@ -33,7 +33,6 @@ class Thermometer(db.Model):
     device_id = db.Column(db.Integer, primary_key=True)
     device_name = db.Column(db.String(100))
     container = db.relationship("Container", secondary="container_thermometers", back_populates="thermometers")
-    reads = db.relationship("Read", secondary="thermometer_reads", back_populates="thermometer")
 
     def __str__(self):
         return self.device_name
@@ -41,7 +40,7 @@ class Thermometer(db.Model):
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    start_timestamp = db.Column(db.Integer)
+    start = db.Column(db.Integer)
     duration = db.Column(db.Integer)
     t_start = db.Column(db.Integer)
     t_min = db.Column(db.Integer)
@@ -59,13 +58,14 @@ class Read(db.Model):
     temperature = db.Column(db.String(10))
     read_time = db.Column(db.String(100))
     db_time = db.Column(db.String(100))
-    thermometer = db.relationship("Thermometer", secondary="thermometer_reads", back_populates="reads")
+    thermometer = db.Column(db.Integer)
     task = db.relationship("Task", secondary="task_reads", back_populates="reads")
 
 
 db.Table(
     "container_thermometers",
-    db.Column("container_name", db.ForeignKey("container.name"), primary_key=True),
+    db.Column("container_id"
+              "", db.ForeignKey("container.name"), primary_key=True),
     db.Column("measure_id", db.ForeignKey("thermometer.device_id"), primary_key=True)
 )
 
@@ -83,12 +83,6 @@ db.Table(
     db.Column("control_id", db.ForeignKey("control.id"), primary_key=True)
 )
 
-
-db.Table(
-    "thermometer_reads",
-    db.Column("thermometer_id", db.ForeignKey("thermometer.device_id"), primary_key=True),
-    db.Column("read_id", db.ForeignKey("read.id"), primary_key=True)
-)
 
 db.Table(
     "task_reads",
