@@ -64,9 +64,8 @@ class Read(db.Model):
 
 db.Table(
     "container_thermometers",
-    db.Column("container_id"
-              "", db.ForeignKey("container.name"), primary_key=True),
-    db.Column("measure_id", db.ForeignKey("thermometer.device_id"), primary_key=True)
+    db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
+    db.Column("thermometer_id", db.ForeignKey("thermometer.device_id"), primary_key=True)
 )
 
 
