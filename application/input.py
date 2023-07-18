@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 from datetime import datetime
 from .models import Container, Thermometer, Task
 from .form import TaskForm
+from .process import execute_task
 from . import db
 from typing import Union
 
@@ -55,6 +56,29 @@ def retrieve_task(task_container: Container) -> Union[Task, None]:
     return old_task[0] if old_task else None
 
 
+def render_task_form(form: TaskForm, task_container: Container, all_containers: list[Container]):
+    return render_template(
+        "task.html",
+        form=form,
+        task_container=task_container,
+        all_containers=all_containers)
+
+
+def save_task_to_db(form: TaskForm, old_task: Task, task_container: Container) -> int:
+    new_task = create_task(form)
+    if old_task:
+        db.session.delete(old_task)
+        new_task.id = old_task.id
+    db.session.add(new_task)
+    task_container.task.clear()
+    task_container.task = [new_task]
+    task_container.thermometers.clear()
+    task_container.thermometers.extend(form.choices.data)
+    task_container.label = form.name.data
+    db.session.commit()
+    return new_task.id
+
+
 @input.route("/task/<container>", methods=["POST", "GET"])
 def task(container):
     task_container = Container.query.get(container)
@@ -63,21 +87,11 @@ def task(container):
     form = TaskForm(data=form_data(task_container, old_task))
     form.choices.query = Thermometer.query.all()
 
-    if form.validate_on_submit():
-        new_task = create_task(form)
-        if old_task:
-            db.session.delete(old_task)
-            new_task.id = old_task.id
-        db.session.add(new_task)
-        task_container.task.clear()
-        task_container.task = [new_task]
-        task_container.thermometers.clear()
-        task_container.thermometers.extend(form.choices.data)
-        task_container.label = form.name.data
-        db.session.commit()
+    if form.cancel.data:
+        return render_task_form(form, task_container, all_containers)
 
-    return render_template(
-        "task.html",
-        form=form,
-        task_container=task_container,
-        all_containers=all_containers)
+    if form.validate_on_submit():
+        new_task_id = save_task_to_db(form, old_task, task_container)
+        execute_task(task_id=new_task_id)
+
+    return render_task_form(form, task_container, all_containers)

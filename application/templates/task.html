@@ -124,7 +124,9 @@
         </div>
 
         <div class="level">
-            <div class="column is-offset-10">
+            <div class="buttons">
+                {{ form.cancel(class="button is-danger is-large") }}
+                {{ form.save(class="button is-info is-large") }}
                 {{ form.submit(class="button is-link is-large") }}
             </div>
         </div>

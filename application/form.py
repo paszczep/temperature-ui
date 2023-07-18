@@ -30,5 +30,8 @@ class TaskForm(FlaskForm):
     t_min = IntegerField('Min temperature')
     t_freeze = IntegerField('Freeze temperature')
     submit = SubmitField('Go!')
+    cancel = SubmitField('Cancel')
+    save = SubmitField('Save')
+
 
 
