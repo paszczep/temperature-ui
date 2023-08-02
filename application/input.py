@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template
 from datetime import datetime
-from .models import Container, Thermometer, Task
-from .form import TaskForm
+from .models import Container, Thermometer, Task, Set
+from .form import TaskForm, SetForm
 from .process import execute_task
 from . import db
 from typing import Union
+from sqlalchemy import select
 
 input = Blueprint('input', __name__)
 
@@ -95,3 +96,44 @@ def task(container):
         execute_task(task_id=new_task_id)
 
     return render_task_form(form, task_container, all_containers)
+
+
+def render_set_form(form: SetForm, container: Container, all_containers: list[Container]):
+    return render_template(
+        "set.html",
+        form=form,
+        task_container=container,
+        all_containers=all_containers)
+
+
+def set_data(set_container: Container, old_set: Union[Set, None]) -> dict:
+    now = datetime.now()
+    return {'name': set_container.label,
+            'date': now.date(),
+            'time': now.time(),
+            'temperature': old_set.temperature if old_set else 0
+            }
+
+
+def retrieve_set(set_container: Container) -> Union[Set, None]:
+    old_set = Set.query.filter_by(container=set_container.name).first()
+    return old_set if old_set else None
+
+
+@input.route("/set/<container>", methods=["POST", "GET"])
+def temp_set(container):
+    set_container = Container.query.get(container)
+    all_containers = Container.query.all()
+
+    old_set = retrieve_set(set_container)
+
+    set_form = SetForm(data=set_data(set_container, old_set))
+    if set_form.cancel.data:
+        return render_set_form(set_form, set_container, all_containers)
+
+    if set_form.validate_on_submit():
+        pass
+
+    return render_set_form(set_form, set_container, all_containers)
+
+

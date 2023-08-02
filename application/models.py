@@ -62,6 +62,15 @@ class Read(db.Model):
     task = db.relationship("Task", secondary="task_reads", back_populates="reads")
 
 
+class Set(db.Model):
+    __tablename___ = 'set'
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(25))
+    temperature = db.Column(db.String(10))
+    timestamp = db.Column(db.Integer)
+    container = db.Column(db.String(100))
+
+
 db.Table(
     "container_thermometers",
     db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),

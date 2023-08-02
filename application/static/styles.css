@@ -4,16 +4,9 @@
     align-items: center;
     }
 
-.green {
-  background-color: green;
-}
-
-.white-border {
-    border-color: white;
-    border-style: solid;
-    border-width: thin;
-}
-
-.inline {
-    white-space: nowrap;
+.border-pad {
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }

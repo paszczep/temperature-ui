@@ -1,0 +1,43 @@
+<div class="tile is-parent">
+<ion-icon class="icon tile is-2 is-medium" name="thermometer-outline"></ion-icon>
+
+<div class="tile is-vertical">
+
+    <!--start-->
+    <div class="tile is-parent">
+        <ion-icon name="play-forward-sharp" class="icon is-medium tile is-2"></ion-icon>
+        <div class="tile is-4 control has-icons-right">
+            {{ form.t_start(class="input") }}
+            <span class="icon is-right">°C</span>
+        </div>
+    </div>
+
+
+    <!--minimum-->
+    <div class="tile is-parent">
+        <div class="tile icon is-2 center"><p class="is-size-5">min</p></div>
+        <div class="tile is-4 control has-icons-right">
+            {{ form.t_min(class="input") }}
+            <span class="icon is-right">°C</span>
+        </div>
+    </div>
+
+    <!--maximum-->
+    <div class="tile is-parent">
+        <div class="tile  icon is-2 center"><p class="is-size-5">max</p></div>
+        <div class="tile is-4 control has-icons-right">
+            {{ form.t_max(class="input") }}
+            <span class="icon is-right">°C</span>
+        </div>
+    </div>
+
+    <!--freezing-->
+    <div class="tile is-parent">
+        <ion-icon name="snow-outline" class="icon is-medium tile is-2"></ion-icon>
+        <div class="tile is-4 control has-icons-right">
+            {{ form.t_freeze(class="input") }}
+            <span class="icon is-right">°C</span>
+        </div>
+    </div>
+</div>
+</div>

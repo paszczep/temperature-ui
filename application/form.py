@@ -34,4 +34,11 @@ class TaskForm(FlaskForm):
     save = SubmitField('Save')
 
 
-
+class SetForm(FlaskForm):
+    name = StringField('Name', validators=[Length(min=3, max=16)])
+    temperature = IntegerField('Set temperature')
+    date = DateField('Date')
+    time = TimeField('Time')
+    submit = SubmitField('Go!')
+    cancel = SubmitField('Cancel')
+    save = SubmitField('Save')

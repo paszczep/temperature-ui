@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="block">
+    {% include "components/container_select.html" %}
+    <div class="box">
+        {% include "components/action_select.html" %}
+
+        <form method="POST">
+            <div class="level block tile is-vertical">
+                {% include "components/name.html" %}
+                {% include "components/temp_set.html" %}
+                {% include "components/beginning.html" %}
+            </div>
+            {% include "components/buttons.html" %}
+
+            {{ form.csrf_token }}
+        </form>
+    </div>
+</div>
+{% endblock %}

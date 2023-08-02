@@ -1,0 +1,15 @@
+<div class="tabs tile is-centered is-toggle">
+    <ul>
+        {% for cont in all_containers %}
+        {% if cont == task_container: %}
+        <li class="is-active">
+            <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
+        </li>
+        {% else %}
+        <li>
+            <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
