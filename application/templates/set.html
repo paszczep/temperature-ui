@@ -2,18 +2,19 @@
 
 {% block content %}
 <div class="block">
-    {% include "components/container_select.html" %}
+    {% include "components/select_container.html" %}
     <div class="box">
-        {% include "components/action_select.html" %}
+        {% include "components/select_action.html" %}
 
         <form method="POST">
-            <div class="level block tile is-vertical">
+            <div class="columns tile is-vertical">
+            <div class="level column is-full tile is-vertical large-pad">
                 {% include "components/name.html" %}
                 {% include "components/temp_set.html" %}
                 {% include "components/beginning.html" %}
             </div>
-            {% include "components/buttons.html" %}
-
+            <div class="column">{% include "components/buttons.html" %}</div>
+            </div>
             {{ form.csrf_token }}
         </form>
     </div>

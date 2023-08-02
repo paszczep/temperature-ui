@@ -1,0 +1,35 @@
+<p class="buttons center">
+    {% if '/set/' in url_for(request.endpoint, container=task_container.name) %}
+
+        <a class="button is-large is-static"
+           href="{{ url_for('input.temp_set', container=task_container.name) }}">
+            <span class="icon is-large">
+                <ion-icon name="alarm-outline"></ion-icon>
+            </span>
+        </a>
+
+
+        <a class="button is-large" href="{{ url_for('input.task', container=task_container.name) }}">
+            <span class="icon is-large">
+                <ion-icon name="airplane-outline"></ion-icon>
+            </span>
+        </a>
+
+    {% else %}
+
+        <a class="button is-large" href="{{ url_for('input.temp_set', container=task_container.name) }}">
+            <span class="icon is-large">
+                <ion-icon name="alarm-outline"></ion-icon>
+            </span>
+        </a>
+
+
+        <a class="button is-large is-static" href="{{ url_for('input.task', container=task_container.name) }}">
+            <span class="icon is-large">
+                <ion-icon name="airplane-outline"></ion-icon>
+            </span>
+        </a>
+
+
+    {% endif %}
+</p>

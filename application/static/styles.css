@@ -4,9 +4,22 @@
     align-items: center;
     }
 
+.centered {
+    display: flex;
+    justify-content: center;
+    }
+
 .border-pad {
   padding-top: 10px;
   padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+
+.large-pad {
+  padding-top: 10px;
+  padding-right: 100px;
   padding-bottom: 10px;
   padding-left: 10px;
 }

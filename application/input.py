@@ -36,7 +36,8 @@ def form_data(task_container: Container, old_task: Union[Task, None]) -> dict:
 
 
 def start_from_form(form: TaskForm) -> int:
-    return int(datetime.timestamp(datetime.strptime(f'{form.date.data} {form.time.data}', '%Y-%m-%d %H:%M:%S')))
+    form_date_time = f'{form.date.data} {form.time.data}'
+    return int(datetime.timestamp(datetime.strptime(form_date_time, '%Y-%m-%d %H:%M:%S')))
 
 
 def create_task(form: TaskForm) -> Task:
@@ -91,6 +92,9 @@ def task(container):
     if form.cancel.data:
         return render_task_form(form, task_container, all_containers)
 
+    if form.save.data:
+        save_task_to_db(form, old_task, task_container)
+
     if form.validate_on_submit():
         new_task_id = save_task_to_db(form, old_task, task_container)
         execute_task(task_id=new_task_id)
@@ -128,6 +132,9 @@ def temp_set(container):
     old_set = retrieve_set(set_container)
 
     set_form = SetForm(data=set_data(set_container, old_set))
+    if set_form.cancel.data:
+        pass
+
     if set_form.cancel.data:
         return render_set_form(set_form, set_container, all_containers)
 
