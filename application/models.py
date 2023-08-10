@@ -1,5 +1,6 @@
 from . import db
 from flask_login import UserMixin
+from uuid import uuid4
 
 
 class User(UserMixin, db.Model):
@@ -10,6 +11,7 @@ class User(UserMixin, db.Model):
 
 
 class Container(db.Model):
+    """Controlled and Measured upon container"""
     name = db.Column(db.String(100), primary_key=True)
     label = db.Column(db.String(100))
     thermometers = db.relationship("Thermometer", secondary="container_thermometers", back_populates="container")
@@ -17,20 +19,26 @@ class Container(db.Model):
 
 
 class Control(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    action = db.Column(db.String(100))  # check or set
+    id = db.Column(db.String(36), primary_key=True)
+    timestamp = db.Column(db.Integer)
+    target_setpoint = db.Column(db.String(100))
+    task = db.relationship("Task", secondary="task_controls", back_populates="controls")
+
+
+class Check(db.Model):
+    id = db.Column(db.String(36), primary_key=True)
+    container = db.Column(db.String(100))
     timestamp = db.Column(db.Integer)
     logged = db.Column(db.String(100))
     received = db.Column(db.String(100))
     power = db.Column(db.String(100))
-    target_setpoint = db.Column(db.String(100))
     read_setpoint = db.Column(db.String(10))
-    task = db.relationship("Task", secondary="task_controls", back_populates="controls")
 
 
 class Thermometer(db.Model):
+    """Measures temperature within Container during a Task"""
     __tablename__ = 'thermometer'
-    device_id = db.Column(db.Integer, primary_key=True)
+    device_id = db.Column(db.String(25), primary_key=True)
     device_name = db.Column(db.String(100))
     container = db.relationship("Container", secondary="container_thermometers", back_populates="thermometers")
 
@@ -39,7 +47,7 @@ class Thermometer(db.Model):
 
 
 class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True)
     start = db.Column(db.Integer)
     duration = db.Column(db.Integer)
     t_start = db.Column(db.Integer)
@@ -53,18 +61,19 @@ class Task(db.Model):
 
 
 class Read(db.Model):
+    """Thermometer read within a task"""
     __tablename__ = 'read'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True)
     temperature = db.Column(db.String(10))
-    read_time = db.Column(db.String(100))
-    db_time = db.Column(db.String(100))
+    read_time = db.Column(db.Integer)
+    db_time = db.Column(db.Integer)
     thermometer = db.Column(db.Integer)
     task = db.relationship("Task", secondary="task_reads", back_populates="reads")
 
 
 class Set(db.Model):
     __tablename___ = 'set'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True)
     status = db.Column(db.String(25))
     temperature = db.Column(db.String(10))
     timestamp = db.Column(db.Integer)

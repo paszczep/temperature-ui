@@ -5,21 +5,21 @@
     {% include "components/select_container.html" %}
 
     <div class="box">
-
         {% include "components/select_action.html" %}
-        <form class="box" method="POST">
-            <div class="columns">
-                <div class="column is-three-fifths">
+        <form method="POST">
+            <div class="columns is-centered level">
+                <div class="column is-7 tile is-ancestor is-vertical">
                     {% include "components/name.html" %}
                     {% include "components/beginning.html" %}
                     {% include "components/duration.html" %}
                     {% include "components/temp_band.html" %}
                 </div>
-                <div class="column is-narrow section">
+                <div class="column is-3">
                     {% include "components/measures.html" %}
                 </div>
-            </div>
-            <div class="level">{% include "components/buttons.html" %}</div>
+                </div>
+
+            {% include "components/buttons.html" %}
 
             {{ form.csrf_token }}
         </form>

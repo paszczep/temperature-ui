@@ -1,4 +1,4 @@
-conda activate temp_ui --stack
+source venv/bin/activate
 source .env
 rm -fr migrations instance
 flask db init
