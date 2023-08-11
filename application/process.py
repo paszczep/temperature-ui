@@ -6,8 +6,8 @@ activate_venv = app_root / 'venv' / 'bin' / 'activate'
 app_script = app_root / 'src' / 'execute.py'
 
 
-def execute_task(task_id: int):
-    command = f'source {activate_venv}; python {app_script} {str(task_id)}'
+def execute_task(task_id: str):
+    command = f'source {activate_venv}; python {app_script} {task_id}'
     subprocess.call(command, shell=True, executable='/bin/bash')
 
 

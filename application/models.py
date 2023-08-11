@@ -40,10 +40,11 @@ class Thermometer(db.Model):
     __tablename__ = 'thermometer'
     device_id = db.Column(db.String(25), primary_key=True)
     device_name = db.Column(db.String(100))
+    device_group = db.Column(db.String(100))
     container = db.relationship("Container", secondary="container_thermometers", back_populates="thermometers")
 
     def __str__(self):
-        return self.device_name
+        return f'{self.device_name} {self.device_group}'
 
 
 class Task(db.Model):
@@ -67,7 +68,7 @@ class Read(db.Model):
     temperature = db.Column(db.String(10))
     read_time = db.Column(db.Integer)
     db_time = db.Column(db.Integer)
-    thermometer = db.Column(db.Integer)
+    thermometer = db.Column(db.String(10))
     task = db.relationship("Task", secondary="task_reads", back_populates="reads")
 
 
