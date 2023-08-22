@@ -1,0 +1,16 @@
+{% if status == 'new' %}
+<span class="tag is-black">Black</span>
+
+{% elif status == 'running' %}
+<span class="tag is-dark">Dark</span>
+
+{% elif status == 'canceled' %}
+<span class="tag is-light">Light</span>
+
+{% elif status == 'ended' %}
+<span class="tag is-white">White</span>
+
+{% elif status == 'error' %}
+<span class="tag is-primary">Primary</span>
+
+{% endif %}

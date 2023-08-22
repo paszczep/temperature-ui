@@ -4,22 +4,49 @@
 <table class="table is-hoverable has-background-grey has-text-link">
     <thead>
     <tr>
-        <th class="is-size-5 has-text-link">given name</th>
-        <th class="is-size-5 has-text-link">id</th>
-        <th class="is-size-5 has-text-link">task</th>
+        <th class="has-text-link">id</th>
+        <th class="has-text-link">given name</th>
+        <th class="has-text-link">power</th>
+        <th class="is-size-1 has-text-link">set point</th>
+        <th class="is-size-1 has-text-link">
+            <span class="icon is-large">
+                <ion-icon name="airplane-outline"></ion-icon>
+            </span>
+        </th>
+        <th class="is-size-1 has-text-link">
+            <span class="icon is-large">
+                <ion-icon name="alarm-outline"></ion-icon>
+            </span>
+        </th>
     </tr>
     </thead>
     <tbody>
     {% for container in containers %}
 
     <tr>
+        <td>{{ container.name }}</td>
         <td>
         <a href="{{ url_for('input.task', container=container.name) }}">
                 {{ container.label }}
         </a>
         </td>
-        <td>{{ container.name }}</td>
-        <td>{% if container.task %}{{ container.task[0].status }}{% else %} - {% endif %}</td>
+        <td>{{ checks[container.name].power }}</td>
+        <td>{{ checks[container.name].read_setpoint }}</td>
+        <td>
+            <a class="button center" href="{{ url_for('input.task', container=container.name) }}">
+
+            {% if container.task %}
+                {{ container.task[0].status }}
+            {% else %}
+                +
+            {% endif %}
+            </a>
+        </td>
+        <td>
+            <a class="button center" href="{{ url_for('input.temp_set', container=container.name) }}">
+            {% if container.set %}{{ container.set[0].status }}{% else %} + {% endif %}
+            </a>
+        </td>
     </tr>
 
 

@@ -40,6 +40,9 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    from .control import control as control_blueprint
+    app.register_blueprint(control_blueprint)
+
     from .user_input import user_input as input_blueprint
     app.register_blueprint(input_blueprint)
 

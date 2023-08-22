@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for
 from datetime import datetime
-from .models import Container, Thermometer, Task, Set
+from .models import Container, Thermometer, Task, Set, Check
 from .form import TaskForm, SetForm
 from .process import execute_task, initialize_database
 from . import db
@@ -9,6 +9,18 @@ from uuid import uuid4
 from random import randint
 
 user_input = Blueprint('input', __name__)
+
+
+@user_input.route('/task')
+def tasks():
+    checks = {Check.query.all()}
+    return render_template(
+        'control.html',
+        containers=(containers := Container.query.all()),
+        len=len(containers),
+        sets=Set.query.all(),
+        checks=checks
+    )
 
 
 def timestamp_from_selection(form: Union[TaskForm, SetForm]) -> int:
@@ -100,80 +112,3 @@ def task(container):
             execute_task(task_id=new_task.id)
 
     return render_task_form(form, task_container, all_containers)
-
-
-def render_set_form(form: SetForm, container: Container, all_containers: list[Container]):
-    return render_template(
-        "set.html",
-        form=form,
-        task_container=container,
-        all_containers=all_containers)
-
-
-def set_data(set_container: Container, old_set: Union[Set, None]) -> dict:
-    now = datetime.now()
-    return {'name': set_container.label,
-            'date': (set_datetime := datetime.fromtimestamp(old_set.timestamp)).date() if old_set else now.date(),
-            'time': set_datetime.time() if old_set else now.time(),
-            'temperature': old_set.temperature if old_set else 0
-            }
-
-
-def retrieve_set(set_container: Container) -> Union[Task, None]:
-    old_set = set_container.set
-    return old_set[0] if old_set else None
-
-
-def retrieve_old_set(set_container: Container) -> Union[Set, None]:
-    old_set = Set.query.filter_by(container=set_container.name).first()
-    if old_set:
-        if old_set.status != 'canceled':
-            return old_set
-    return None
-
-
-def create_set(set_form: SetForm, set_container: Container) -> Set:
-    return Set(
-        id=str(uuid4()),
-        status='new',
-        temperature=set_form.temperature.data,
-        timestamp=timestamp_from_selection(set_form),
-        container=[set_container]
-    )
-
-
-def save_container_label_to_db(container: Container, form: Union[SetForm, TaskForm]):
-    container.label = form.name.data
-    db.session.commit()
-
-
-def save_set_to_db(new_set: Set, old_set: Union[Set, None]):
-    if old_set:
-        db.session.delete(old_set)
-    db.session.add(new_set)
-    db.session.commit()
-
-
-@user_input.route("/set/<container>", methods=["POST", "GET"])
-def temp_set(container):
-    set_container = Container.query.get(container)
-    all_containers = Container.query.all()
-    existing_set = retrieve_set(set_container)
-    set_form = SetForm(data=set_data(set_container, existing_set))
-
-    if set_form.validate_on_submit():
-        if set_form.cancel.data:
-            pass
-        else:
-            set_container.label = set_form.name.data
-        if set_form.save.data:
-            new_set = create_set(set_form, set_container)
-            save_set_to_db(new_set, existing_set)
-        if set_form.submit.data:
-            new_set = create_set(set_form, set_container)
-            new_set.status = 'running'
-            save_set_to_db(new_set, existing_set)
-
-    return render_set_form(set_form, set_container, all_containers)
-
-

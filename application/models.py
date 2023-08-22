@@ -16,6 +16,7 @@ class Container(db.Model):
     label = db.Column(db.String(100))
     thermometers = db.relationship("Thermometer", secondary="container_thermometers", back_populates="container")
     task = db.relationship("Task", secondary="container_task", back_populates="container")
+    set = db.relationship("Set", secondary="container_set", back_populates="container")
 
 
 class Control(db.Model):
@@ -26,6 +27,7 @@ class Control(db.Model):
 
 
 class Check(db.Model):
+    __tablename__ = 'container_check'
     id = db.Column(db.String(36), primary_key=True)
     container = db.Column(db.String(100))
     timestamp = db.Column(db.Integer)
@@ -48,6 +50,10 @@ class Thermometer(db.Model):
 
 
 class Task(db.Model):
+    """
+    statuses: new, running, canceled, ended
+    """
+
     id = db.Column(db.String(36), primary_key=True)
     start = db.Column(db.Integer)
     duration = db.Column(db.Integer)
@@ -78,7 +84,14 @@ class Set(db.Model):
     status = db.Column(db.String(25))
     temperature = db.Column(db.String(10))
     timestamp = db.Column(db.Integer)
-    container = db.Column(db.String(100))
+    container = db.relationship("Container", secondary="container_set", back_populates="set")
+
+
+db.Table(
+    "container_set",
+    db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
+    db.Column("set_id", db.ForeignKey("set.id"), primary_key=True)
+)
 
 
 db.Table(
