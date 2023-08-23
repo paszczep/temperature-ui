@@ -1,35 +1,24 @@
-{% if '/task/' in url_for(request.endpoint, container=task_container.name) %}
 
-    <div class="tabs tile is-centered is-toggle">
-        <ul>
-            {% for cont in all_containers %}
-            {% if cont == task_container: %}
-            <li class="is-active">
-                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
-            </li>
-            {% else %}
-            <li>
-                <a href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
+<div class="buttons">
+    {% for cont in all_containers %}
+
+{% if not cont.set and (cont.task or '/task/' in url_for(request.endpoint, container=task_container.name)) %}
+
+        {% if cont == task_container: %}
+            <a class="button is-active" href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
+        {% else %}
+            <a class="button" href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
+        {% endif %}
 
 {% else %}
-     <div class="tabs tile is-centered is-toggle">
-        <ul>
-            {% for cont in all_containers %}
-            {% if cont == task_container: %}
-            <li class="is-active">
-                <a href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
-            </li>
+
+        {% if cont == task_container: %}
+            <a class="button is-active" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
             {% else %}
-            <li>
-                <a href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
+        <a class="button" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
+
+        {% endif %}
 {% endif %}
+        {% endfor %}
+
+</div>

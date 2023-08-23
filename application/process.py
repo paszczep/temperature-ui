@@ -12,7 +12,7 @@ app_script = app_root / 'src' / 'execute.py'
 
 
 def execute_task(task_id: str):
-    command = f'source {activate_venv}; python {app_script} {task_id}'
+    command = f'source {activate_venv}; python {app_script} --task={task_id}'
     subprocess.call(command, shell=True, executable='/bin/bash')
 
 
@@ -38,4 +38,5 @@ def schedule_temperature_setting(set_to_go: Set):
 
 
 def execute_set(executed_set: Set):
-    thread = Thread()
+    thread = Thread(target=schedule_temperature_setting, args=[executed_set])
+    thread.run()

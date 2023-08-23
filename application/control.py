@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template
-from .process import initialize_database
+from .process import initialize_database, check_containers
 from .models import Check, Container, Set
 
 
@@ -18,8 +18,14 @@ def tasks():
     )
 
 
-@control.route("/initialize", methods=["POST"])
+@control.route("/control/initialize", methods=["POST"])
 def init_db():
     initialize_database()
-    return redirect('/task')
+    return redirect('/control')
+
+
+@control.route("/control/check", methods=["POST"])
+def check():
+    check_containers()
+    return redirect('/control')
 

@@ -1,0 +1,11 @@
+{% if not container.set %}
+<a class="button is-link is-inverted center" href="{{ url_for('input.task', container=container.name) }}">
+    {% if container.task %}
+        {{ container.task[0].status }}
+    {% else %}
+        +
+    {% endif %}
+</a>
+{% else %}
+<a class="button is-link is-inverted is-static center">+</a>
+{% endif %}

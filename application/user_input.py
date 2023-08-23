@@ -87,7 +87,8 @@ def task(container):
 
     if form.validate_on_submit():
         if form.cancel.data:
-            pass
+            delete_old_task(existing_task)
+            db.session.commit()
         if form.save.data:
             delete_old_task(existing_task)
             create_task_settings(form, task_container)
@@ -147,15 +148,21 @@ def save_container_label_to_db(container: Container, form: Union[SetForm, TaskFo
     db.session.commit()
 
 
-def save_set_to_db(new_set: Set, old_set: Union[Set, None]):
-    if old_set:
-        db.session.delete(old_set)
-    db.session.add(new_set)
-    db.session.commit()
-
-
 @user_input.route("/set/<container>", methods=["POST", "GET"])
 def temp_set(container):
+
+    def save_set_to_db(created_set: Set, old_set: Union[Set, None]):
+        if old_set:
+            db.session.delete(old_set)
+        db.session.add(created_set)
+        db.session.commit()
+
+    def cancel_set(cancelled_set: Union[Set, None]):
+        if cancelled_set:
+            if cancelled_set.status == 'new':
+                db.session.delete(cancelled_set)
+                db.session.commit()
+
     set_container = Container.query.get(container)
     all_containers = Container.query.all()
     existing_set = retrieve_set(set_container)
@@ -163,7 +170,7 @@ def temp_set(container):
 
     if set_form.validate_on_submit():
         if set_form.cancel.data:
-            pass
+            cancel_set(existing_set)
         else:
             set_container.label = set_form.name.data
         if set_form.save.data:

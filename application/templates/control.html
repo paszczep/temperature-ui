@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="columns is-multiline tile is-vertical">
 <div class="column hero box has-background-grey">
 <table class="table is-hoverable has-background-grey has-text-link">
     <thead>
     <tr>
-        <th class="has-text-link">id</th>
-        <th class="has-text-link">given name</th>
-        <th class="has-text-link">power</th>
-        <th class="is-size-1 has-text-link">set point</th>
-        <th class="is-size-1 has-text-link">
-            <span class="icon is-large">
-                <ion-icon name="airplane-outline"></ion-icon>
-            </span>
+        <th class="is-size-5 has-text-link">
+<!--            id-->
         </th>
-        <th class="is-size-1 has-text-link">
-            <span class="icon is-large">
-                <ion-icon name="alarm-outline"></ion-icon>
-            </span>
+        <th class="is-size-5 has-text-link">
+                <ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon>
+        </th>
+        <th class="is-size-5 has-text-link">
+            <ion-icon class="icon is-medium" name="power"></ion-icon>
+        </th>
+        <th class="is-size-5 has-text-link">
+            <ion-icon class="icon is-medium" name="thermometer-outline"></ion-icon>
+        </th>
+        <th class="is-size-5 has-text-link">
+                <ion-icon  class="icon is-medium" name="airplane-outline"></ion-icon>
+        </th>
+        <th class="is-size-5 has-text-link">
+                <ion-icon class="icon is-medium" name="alarm-outline"></ion-icon>
         </th>
     </tr>
     </thead>
@@ -25,27 +30,17 @@
 
     <tr>
         <td>{{ container.name }}</td>
-        <td>
-        <a href="{{ url_for('input.task', container=container.name) }}">
-                {{ container.label }}
-        </a>
-        </td>
+        <td>{{ container.label }}</td>
         <td>{{ checks[container.name].power }}</td>
         <td>{{ checks[container.name].read_setpoint }}</td>
         <td>
-            <a class="button center" href="{{ url_for('input.task', container=container.name) }}">
 
-            {% if container.task %}
-                {{ container.task[0].status }}
-            {% else %}
-                +
-            {% endif %}
-            </a>
+                {% include "components/add_task_button.html" %}
+
         </td>
         <td>
-            <a class="button center" href="{{ url_for('input.temp_set', container=container.name) }}">
-            {% if container.set %}{{ container.set[0].status }}{% else %} + {% endif %}
-            </a>
+                {% include "components/add_set_button.html" %}
+
         </td>
     </tr>
 
@@ -54,4 +49,7 @@
     </tbody>
 </table>
 </div>
+<div class="column">    {% include "components/table_buttons.html" %}
+</div>
+    </div>
 {% endblock %}
