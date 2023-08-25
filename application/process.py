@@ -26,15 +26,17 @@ def check_containers():
     subprocess.call(command, shell=True, executable='/bin/bash')
 
 
-def set_temperature(set_id: str):
-    command = f'source {activate_venv}; python {app_script} --set={set_id}'
+def set_temperature(run_set: Set):
+    command = f'source {activate_venv}; python {app_script} --set={run_set.id}'
     subprocess.call(command, shell=True, executable='/bin/bash')
 
 
 def schedule_temperature_setting(set_to_go: Set):
-    scheduler = sched.scheduler(time, sleep)
-    scheduler.enterabs(set_to_go.timestamp, 0, set_temperature, kwargs={'set_id': set_to_go.id})
-    scheduler.run()
+    sleep(5)
+    if set_to_go.status == 'running':
+        scheduler = sched.scheduler(time, sleep)
+        scheduler.enterabs(set_to_go.timestamp, 0, set_temperature, kwargs={'run_set': set_to_go})
+        scheduler.run()
 
 
 def execute_set(executed_set: Set):

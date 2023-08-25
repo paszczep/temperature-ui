@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for
 from datetime import datetime
 from .models import Container, Thermometer, Task, Set
 from .form import TaskForm, SetForm
-from .process import execute_task, initialize_database
+from .process import execute_task, initialize_database, execute_set
 from . import db
 from typing import Union
 from uuid import uuid4
@@ -68,7 +68,9 @@ def render_task_form(form: TaskForm, task_container: Container, all_containers: 
         "task.html",
         form=form,
         task_container=task_container,
-        all_containers=all_containers)
+        all_containers=all_containers,
+        status=task_container.task[0].status if task_container.task else None
+    )
 
 
 def delete_old_task(del_task: Task):
@@ -103,12 +105,14 @@ def task(container):
     return render_task_form(form, task_container, all_containers)
 
 
-def render_set_form(form: SetForm, container: Container, all_containers: list[Container]):
+def render_set_template(form: SetForm, container: Container, all_containers: list[Container]):
     return render_template(
         "set.html",
         form=form,
         task_container=container,
-        all_containers=all_containers)
+        all_containers=all_containers,
+        status=container.set[0].status if container.set else None
+    )
 
 
 def set_data(set_container: Container, old_set: Union[Set, None]) -> dict:
@@ -159,9 +163,11 @@ def temp_set(container):
 
     def cancel_set(cancelled_set: Union[Set, None]):
         if cancelled_set:
-            if cancelled_set.status == 'new':
+            if cancelled_set.status in ('new', 'ended'):
                 db.session.delete(cancelled_set)
-                db.session.commit()
+            elif cancelled_set.status == 'running':
+                cancelled_set.status = 'cancelled'
+            db.session.commit()
 
     set_container = Container.query.get(container)
     all_containers = Container.query.all()
@@ -180,7 +186,8 @@ def temp_set(container):
             new_set = create_set(set_form, set_container)
             new_set.status = 'running'
             save_set_to_db(new_set, existing_set)
+            execute_set(executed_set=new_set)
 
-    return render_set_form(set_form, set_container, all_containers)
+    return render_set_template(set_form, set_container, all_containers)
 
 

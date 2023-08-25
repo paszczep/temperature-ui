@@ -3,9 +3,9 @@
     {% if container.task %}
         {{ container.task[0].status }}
     {% else %}
-        +
+        <ion-icon class="icon is-medium" name="add"></ion-icon>
     {% endif %}
 </a>
 {% else %}
-<a class="button is-link is-inverted is-static center">+</a>
+<a class="button is-link is-inverted center" disabled><ion-icon class="icon is-medium" name="add"></ion-icon></a>
 {% endif %}

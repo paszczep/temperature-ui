@@ -79,7 +79,7 @@ class Read(db.Model):
 
 
 class Set(db.Model):
-    __tablename___ = 'set'
+    __tablename__ = 'temp_set'
     id = db.Column(db.String(36), primary_key=True)
     status = db.Column(db.String(25))
     temperature = db.Column(db.String(10))
@@ -90,7 +90,7 @@ class Set(db.Model):
 db.Table(
     "container_set",
     db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
-    db.Column("set_id", db.ForeignKey("set.id"), primary_key=True)
+    db.Column("set_id", db.ForeignKey("temp_set.id"), primary_key=True)
 )
 
 

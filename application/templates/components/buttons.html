@@ -1,6 +1,19 @@
 
 <div class="buttons tile is-child">
     {{ form.cancel(class="button is-danger is-medium") }}
-    {{ form.save(class="button is-info is-medium") }}
-    {{ form.submit(class="button is-link is-medium") }}
+
+
+    {% if status == 'new' %}
+        {{ form.save(class="button is-info is-medium") }}
+        {{ form.submit(class="button is-link is-medium") }}
+
+    {% elif status == 'running' %}
+        {{ form.save(class="button is-info is-medium is-static") }}
+        {{ form.submit(class="button is-link is-medium is-static") }}
+
+    {% else %}
+        {{ form.save(class="button is-info is-medium") }}
+        {{ form.submit(class="button is-link is-medium is-static") }}
+
+    {% endif %}
 </div>

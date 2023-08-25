@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, render_template
 from .process import initialize_database, check_containers
 from .models import Check, Container, Set
+from . import db
 
 
 control = Blueprint('control', __name__)
@@ -8,13 +9,12 @@ control = Blueprint('control', __name__)
 
 @control.route('/control')
 def tasks():
-    checks = {c.container: c for c in Check.query.all()}
     return render_template(
         'control.html',
         containers=(containers := Container.query.all()),
-        len=len(containers),
+        len=(length := len(containers)),
         sets=Set.query.all(),
-        checks=checks
+        checks={c.container: c for c in Check.query.order_by(Check.timestamp.desc()).limit(length)}
     )
 
 
@@ -26,6 +26,7 @@ def init_db():
 
 @control.route("/control/check", methods=["POST"])
 def check():
+
     check_containers()
     return redirect('/control')
 
