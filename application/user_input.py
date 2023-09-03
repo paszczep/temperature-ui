@@ -189,5 +189,3 @@ def temp_set(container):
             execute_set(executed_set=new_set)
 
     return render_set_template(set_form, set_container, all_containers)
-
-

@@ -41,4 +41,4 @@ def schedule_temperature_setting(set_to_go: Set):
 
 def execute_set(executed_set: Set):
     thread = Thread(target=schedule_temperature_setting, args=[executed_set])
-    thread.run()
+    thread.start()

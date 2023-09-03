@@ -17,8 +17,14 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = getenv('DB_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SECRET_KEY'] = getenv('SECRET_KEY')
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+
+    db_user = 'admin'
+    db_password = '9jH3N88yIxExJhZwylz4ew8sEvd52hLZ'
+    db_name = 'taempe_db'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@localhost:5432/{db_name}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
@@ -47,4 +53,5 @@ def create_app():
     app.register_blueprint(input_blueprint)
 
     return app
+
 

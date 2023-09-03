@@ -1,8 +1,14 @@
 <div class="buttons">
 
     <form action="{{ url_for('control.check') }}" method="post">
-        <button class="button block" type="submit">
+        <button class="button" type="submit">
             <ion-icon class="icon is-large" name="refresh"></ion-icon>
+        </button>
+    </form>
+    &nbsp;
+    <form action="{{ url_for('control.init_db') }}" method="post">
+        <button class="button" type="submit">
+            <ion-icon class="icon is-large" name="play-circle"></ion-icon>
         </button>
     </form>
 

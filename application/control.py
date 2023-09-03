@@ -26,7 +26,6 @@ def init_db():
 
 @control.route("/control/check", methods=["POST"])
 def check():
-
     check_containers()
     return redirect('/control')
 
