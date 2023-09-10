@@ -2,7 +2,7 @@ from . import db
 from flask_login import UserMixin
 
 
-class User(UserMixin, db.Model):
+class AppUser(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
@@ -24,6 +24,7 @@ class Control(db.Model):
     timestamp = db.Column(db.Integer)
     target_setpoint = db.Column(db.String(100))
     task = db.relationship("Task", secondary="task_controls", back_populates="controls")
+    set = db.relationship("Set", secondary="set_controls", back_populates="controls")
 
 
 class Check(db.Model):
@@ -53,7 +54,6 @@ class Task(db.Model):
     """
     statuses: new, running, canceled, ended
     """
-
     id = db.Column(db.String(36), primary_key=True)
     start = db.Column(db.Integer)
     duration = db.Column(db.Integer)
@@ -85,6 +85,7 @@ class Set(db.Model):
     temperature = db.Column(db.String(10))
     timestamp = db.Column(db.Integer)
     container = db.relationship("Container", secondary="container_set", back_populates="set")
+    controls = db.relationship("Control", secondary="set_controls", back_populates="set")
 
 
 db.Table(
@@ -111,6 +112,13 @@ db.Table(
 db.Table(
     "task_controls",
     db.Column("task_id", db.ForeignKey("task.id"), primary_key=True),
+    db.Column("control_id", db.ForeignKey("control.id"), primary_key=True)
+)
+
+
+db.Table(
+    "set_controls",
+    db.Column("set_id", db.ForeignKey("temp_set.id"), primary_key=True),
     db.Column("control_id", db.ForeignKey("control.id"), primary_key=True)
 )
 

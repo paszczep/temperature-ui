@@ -3,13 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from os import getenv
 
-parent_dir = Path(__file__).parent
+parent_dir = Path(__file__).parent.parent
 dotenv_dir = parent_dir / '.env'
-load_dotenv(dotenv_dir)
-
+dotenv_values = dotenv_values(dotenv_dir)
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -18,13 +17,14 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = getenv('SECRET_KEY')
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
-    db_user = 'admin'
-    db_password = '9jH3N88yIxExJhZwylz4ew8sEvd52hLZ'
-    db_name = 'taempe_db'
+    db_user = dotenv_values['DB_USER']
+    db_password = dotenv_values['DB_PASSWORD']
+    db_name = dotenv_values['DB_NAME']
+    db_host = dotenv_values['DB_HOST']
+    db_port = dotenv_values['DB_PORT']
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@localhost:5432/{db_name}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
@@ -34,11 +34,11 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User
+    from .models import AppUser
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return AppUser.query.get(int(user_id))
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)

@@ -3,5 +3,6 @@ instance
 __pycache__
 .idea
 migrations
+local.env
 .env
-requirements.txt
+access_db

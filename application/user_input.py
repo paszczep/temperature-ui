@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from flask_login import login_required
 from datetime import datetime
 from .models import Container, Thermometer, Task, Set
 from .form import TaskForm, SetForm
@@ -79,6 +80,7 @@ def delete_old_task(del_task: Task):
 
 
 @user_input.route("/task/<container>", methods=["POST", "GET"])
+@login_required
 def task(container):
 
     task_container = Container.query.get(container)
@@ -153,6 +155,7 @@ def save_container_label_to_db(container: Container, form: Union[SetForm, TaskFo
 
 
 @user_input.route("/set/<container>", methods=["POST", "GET"])
+@login_required
 def temp_set(container):
 
     def save_set_to_db(created_set: Set, old_set: Union[Set, None]):
