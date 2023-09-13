@@ -16,5 +16,6 @@ def profile():
 
 
 @main.route('/goof')
+@login_required
 def goof():
 	return render_template('goof.html')

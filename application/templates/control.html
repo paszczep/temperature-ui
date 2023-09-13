@@ -19,8 +19,13 @@
     <tr>
         <td>{{ container.name }}</td>
         <td>{{ container.label }}</td>
-        <td>{{ checks[container.name].power }}</td>
-        <td>{{ checks[container.name].read_setpoint }}</td>
+        {% if checks %}
+            <td>{{ checks[container.name].power }}</td>
+            <td>{{ checks[container.name].read_setpoint }}</td>
+        {% else %}
+            <td> - </td>
+            <td> - </td>
+        {% endif %}
         <td>
             {% include "components/add_task_button.html" %}
         </td>
@@ -32,7 +37,16 @@
     </tbody>
 </table>
 </div>
-<div class="column">    {% include "components/table_buttons.html" %}
+<div class="column tile center is-parent">
+    <div class="tile is-6">
+    {% include "components/table_buttons.html" %}
+    </div>
+    <div class="tile is-7">
+    {% if refresh %}
+        {{ refresh }}
+    {% endif %}
+    </div>
+
 </div>
     </div>
 {% endblock %}
