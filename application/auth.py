@@ -71,8 +71,7 @@ def create_admin_user():
 	email = request.args.get('email')
 	name = 'superuser'
 	password = request.args.get('pass')
-	admin_user = AppUser.query.filter_by(
-		admin=True).first()
+	admin_user = AppUser.query.filter_by(admin=True).first()
 	if not admin_user:
 		new_user = AppUser(email=email, name=name, password=generate_password_hash(password, method='sha256'), admin=True)
 		db.session.add(new_user)

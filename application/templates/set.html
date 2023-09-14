@@ -15,8 +15,21 @@
             </div>
             <div class="column">{% include "components/buttons.html" %}</div>
             </div>
+            <div>
+                {% if controls %}
+                    {% for ctrl in controls %}
+                <div>
+                    {{ ctrl['temperature'] }}
+                    &nbsp;
+                    {{ ctrl['timestamp'] }}
+                </div>
+
+                    {% endfor %}
+                {% endif %}
+            </div>
             {{ form.csrf_token }}
         </form>
     </div>
 </div>
+
 {% endblock %}

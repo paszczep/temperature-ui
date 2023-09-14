@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from pathlib import Path
 from dotenv import dotenv_values
-from os import getenv
 
 parent_dir = Path(__file__).parent.parent
 dotenv_dir = parent_dir / '.env'
@@ -16,7 +15,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = getenv('SECRET_KEY')
+    app.config['SECRET_KEY'] = dotenv_values.get('SECRET_KEY')
 
     db_user = dotenv_values['DB_USER']
     db_password = dotenv_values['DB_PASSWORD']

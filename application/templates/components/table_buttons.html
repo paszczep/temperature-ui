@@ -6,16 +6,20 @@
         </button>
     </form>
     &nbsp;
+    {% if current_user.admin %}
 
-    {% if not containers %}
+    <form action="{{ url_for('control.delete_checks') }}" method="post">
+        <button class="button" type="submit">
+            <ion-icon class="icon is-large" name="trash"></ion-icon>
+        </button>
+    </form>
+    &nbsp;
+
     <form action="{{ url_for('control.init_db') }}" method="post">
         <button class="button" type="submit">
             <ion-icon class="icon is-large" name="play-circle"></ion-icon>
         </button>
     </form>
-    {% else %}
-        <button class="button is-static" type="submit">
-            <ion-icon class="icon is-large" name="play-circle"></ion-icon>
-        </button>
+
     {% endif %}
 </div>

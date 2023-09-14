@@ -1,13 +1,16 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template
 from flask_login import login_required
-from datetime import datetime
-from .models import Container, Thermometer, Task, Set
+from .models import Container, Thermometer, Task, Set, Control
 from .form import TaskForm, SetForm
-from .process import execute_task, initialize_database, execute_set
+from .process import execute_task, execute_set, ExecuteSet
 from . import db
 from typing import Union
 from uuid import uuid4
-from random import randint
+from humanize import naturaltime
+from time import time
+from datetime import datetime
+from datetime import timedelta
+
 
 user_input = Blueprint('input', __name__)
 
@@ -108,12 +111,19 @@ def task(container):
 
 
 def render_set_template(form: SetForm, container: Container, all_containers: list[Container]):
+    controls = [{
+        'timestamp': naturaltime(timedelta(seconds=(time() - ctrl.timestamp))),
+        'temperature': ctrl.target_setpoint
+    }
+        for ctrl in container.set[0].controls]
+
     return render_template(
         "set.html",
         form=form,
         task_container=container,
         all_containers=all_containers,
-        status=container.set[0].status if container.set else None
+        status=container.set[0].status if container.set else None,
+        controls=controls
     )
 
 
@@ -189,6 +199,13 @@ def temp_set(container):
             new_set = create_set(set_form, set_container)
             new_set.status = 'running'
             save_set_to_db(new_set, existing_set)
-            execute_set(executed_set=new_set)
+            executed_set = ExecuteSet(
+                id=new_set.id,
+                status=new_set.status,
+                temperature=new_set.temperature,
+                timestamp=new_set.timestamp,
+                container=set_container
+            )
+            execute_set(executed_set=executed_set)
 
     return render_set_template(set_form, set_container, all_containers)
