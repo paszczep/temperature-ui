@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="columns is-multiline center tile is-vertical">
-<div class="column is-7 hero box has-background-grey">
-<table class="table is-hoverable has-background-grey has-text-link">
+<div class="column hero box has-background-grey">
+<table class="table is-grey is-hoverable has-background-grey has-text-dark">
     <thead>
     <tr>
-        <th class="is-size-5 has-text-link"><!--id--></th>
-        <th class="is-size-5 has-text-link"><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
-        <th class="is-size-5 has-text-link"><ion-icon class="icon is-medium" name="power"></ion-icon></th>
-        <th class="is-size-5 has-text-link"><ion-icon class="icon is-medium" name="thermometer-outline"></ion-icon></th>
-        <th class="is-size-5 has-text-link"><ion-icon class="icon is-medium" name="airplane-outline"></ion-icon></th>
-        <th class="is-size-5 has-text-link"><ion-icon class="icon is-medium" name="alarm-outline"></ion-icon></th>
+        <th class="has-text-link"><!--id--></th>
+        <th class="has-text-dark"><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
+        <th class="has-text-dark"><ion-icon class="icon is-medium" name="power"></ion-icon></th>
+        <th class="has-text-dark"><ion-icon class="icon is-medium" name="thermometer-outline"></ion-icon></th>
+        <th class="has-text-dark"><ion-icon class="icon is-medium" name="airplane-outline"></ion-icon></th>
+        <th class="has-text-dark"><ion-icon class="icon is-medium" name="alarm-outline"></ion-icon></th>
     </tr>
     </thead>
     <tbody>
     {% for container in containers %}
 
     <tr>
-        <td>{{ container.name }}</td>
+        <td>{{ container.name[-2:] }}</td>
         <td>{{ container.label }}</td>
         {% if checks %}
             <td>{{ checks[container.name].power }}</td>
@@ -38,10 +38,10 @@
 </table>
 </div>
 <div class="column tile center is-parent">
-    <div class="tile is-10">
+    <div class="tile center">
     {% include "components/table_buttons.html" %}
     </div>
-    <div class="tile is-7">
+    <div class="tile center border-pad">
     {% if refresh %}
         {{ refresh }}
     {% endif %}

@@ -1,12 +1,10 @@
+.task-box-1 {background-color: #286812;}
+
+.set-box-1 {background-color: #359e12;}
+
 .center {
-    display: flex;
     justify-content: center;
     align-items: center;
-    }
-
-.centered {
-    display: flex;
-    justify-content: center;
     }
 
 .border-pad {
@@ -23,3 +21,75 @@
   padding-left: 10px;
 }
 
+.center-text {
+  text-align: center;
+}
+
+.logo {
+   text-decoration: none;
+}
+
+navbar {background-color: black;}
+
+tr {
+      	font-size: 1.0pc;
+}
+
+.setting{
+    width: 150px;
+}
+
+.parent-div {
+    display: grid;
+    gap: 20px;  /* Adds 20px of space between grid items */
+}
+
+.is-100px{
+    width: 15px;
+}
+
+/* tablets up */
+@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+    /* background: red; */
+}
+@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */
+  tr {
+      	font-size: 1.3pc;
+    }
+
+  .row-container-desktop {
+            display: flex;        /* Use Flexbox */
+            flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
+            overflow-x: auto;     /* Allow horizontal scrolling if needed */
+            white-space: nowrap;  /* Prevent content inside children from wrapping */
+        }
+
+}
+
+@media (min-width:1281px) { /* hi-res laptops and desktops */ }
+
+@media (max-width: 1250px) {
+
+}
+
+@media screen and (min-width: 300px) and (max-width: 736px) {
+
+        .row-container {
+            display: flex;        /* Use Flexbox */
+            flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
+            overflow-x: auto;     /* Allow horizontal scrolling if needed */
+            white-space: nowrap;  /* Prevent content inside children from wrapping */
+        }
+
+        .mobile-center{
+            justify-content: center;
+            align-items: center;
+              text-align: center;
+
+            }
+
+        .mobile-emblem{
+            width: 15px;
+
+        }
+}

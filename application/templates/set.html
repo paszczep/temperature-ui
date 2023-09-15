@@ -3,29 +3,26 @@
 {% block content %}
 <div class="block">
     {% include "components/select_container.html" %}
-    <div class="box">
+    <div class="box set-box has-background-grey">
         {% include "components/select_action.html" %}
 
         <form method="POST">
-            <div class="columns tile is-vertical">
-            <div class="level column is-full tile is-vertical large-pad">
-                {% include "components/name.html" %}
-                {% include "components/temp_set.html" %}
-                {% include "components/beginning.html" %}
-            </div>
-            <div class="column">{% include "components/buttons.html" %}</div>
-            </div>
-            <div>
-                {% if controls %}
-                    {% for ctrl in controls %}
-                <div>
-                    {{ ctrl['temperature'] }}
-                    &nbsp;
-                    {{ ctrl['timestamp'] }}
-                </div>
+            <div class="columns is-multiline is-centered">
+                <div class="column is-6 tile is-vertical">
+                    {% include "components/name.html" %}
+                    {% include "components/temp_set.html" %}
+                    {% include "components/beginning.html" %}
 
-                    {% endfor %}
+                </div>
+                {% if controls %}
+                <div class="column is-5 tile is-vertical">
+                    {% include "components/control_steps.html" %}
+                </div>
                 {% endif %}
+
+            </div>
+            <div class="columns is-multiline is-centered">
+                <div class="column is-centered">{% include "components/buttons.html" %}</div>
             </div>
             {{ form.csrf_token }}
         </form>

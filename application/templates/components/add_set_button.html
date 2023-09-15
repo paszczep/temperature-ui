@@ -1,11 +1,13 @@
 {% if not container.task %}
-    <a class="button is-link is-inverted center" href="{{ url_for('input.temp_set', container=container.name) }}">
+    <a class="button is-medium is-dark center" href="{{ url_for('input.temp_set', container=container.name) }}">
         {% if container.set %}
-            {{ container.set[0].status }}
+<!--            {{ container.set[0].status }}-->
+            {% set task_status = container.set[0].status %}
+            {% include "components/status_icon.html" %}
         {% else %}
             <ion-icon class="icon is-medium" name="add"></ion-icon>
         {% endif %}
     </a>
 {% else %}
-    <a class="button is-link is-inverted center" disabled><ion-icon class="icon is-medium" name="add"></ion-icon></a>
+    <a class="button is-medium is-dark center" disabled><ion-icon class="icon is-medium" name="add"></ion-icon></a>
 {% endif %}

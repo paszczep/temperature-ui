@@ -1,0 +1,21 @@
+{% if reads %}
+{% endif %}
+
+<table class="table is-striped is-narrow">
+    <thead>
+    <tr>
+        <th class="is-size-5 has-text-link"><ion-icon name="hourglass-outline"></ion-icon></th>
+        <th class="is-size-5 has-text-link"><ion-icon class="icon is-medium" name="time-outline"></ion-icon></th>
+        <th class="is-size-5 has-text-link"><ion-icon name="eye-outline"></ion-icon></ion-icon></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for read in reads %}
+        <tr>
+            <td class="td is-size-4">{{ read_time.db_time }}</td>
+            <td class="is-size-4">{{ read.read_time }}</td>
+            <td class="is-size-4">{{ read_time.temperature }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

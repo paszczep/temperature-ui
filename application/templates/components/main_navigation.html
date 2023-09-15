@@ -18,6 +18,8 @@
                             <a href="{{ url_for('control.tasks') }}" class="navbar-item">
                                 <ion-icon class="icon is-medium" name="add-circle-outline"></ion-icon>
                             </a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                 <ion-icon class="icon is-medium" name="exit-outline"></ion-icon>
                             </a>

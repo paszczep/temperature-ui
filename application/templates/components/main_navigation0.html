@@ -1,7 +1,7 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+    <a class="logo navbar-item" href="{{ url_for('main.index') }}">
+        {% include "components/logo.html" %}
     </a>
 
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -13,47 +13,38 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item">
-        Home
-      </a>
 
-      <a class="navbar-item">
-        Documentation
-      </a>
 
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
-        </a>
-
-        <div class="navbar-dropdown">
-          <a class="navbar-item">
-            About
-          </a>
-          <a class="navbar-item">
-            Jobs
-          </a>
-          <a class="navbar-item">
-            Contact
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            Report an issue
-          </a>
-        </div>
-      </div>
     </div>
 
     <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-primary">
-            <strong>Sign up</strong>
+                    {% if current_user.is_authenticated %}
+            <a href="{{ url_for('control.tasks') }}" class="navbar-item">
+                <ion-icon class="icon is-medium" name="add-circle-outline"></ion-icon>
+            </a>
+            {% endif %}
+
+                                  {% if current_user.admin %}
+
+                            <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                                <ion-icon class="icon is-medium" name="person-add-outline"></ion-icon>
+                            </a>
+                            {% endif %}
+
+
+          {% if not current_user.is_authenticated %}
+          <a href="{{ url_for('auth.login') }}" class="navbar-item">
+              <ion-icon class="icon is-medium" name="log-in-outline"></ion-icon>
           </a>
-          <a class="button is-light">
-            Log in
+          {% endif %}
+
+          {% if current_user.is_authenticated %}
+          <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+              <ion-icon class="icon is-medium" name="exit-outline"></ion-icon>
           </a>
-        </div>
+          {% endif %}
+
+
       </div>
     </div>
   </div>

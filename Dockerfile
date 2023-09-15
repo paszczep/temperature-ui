@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 RUN source .env
 ENTRYPOINT ["flask"]
-CMD ["run"]
+CMD ["run", "--host=0.0.0.0"]

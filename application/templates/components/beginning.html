@@ -1,13 +1,13 @@
-<div class="tile is-parent">
+<div class="row-container tile is-parent">
     <!--    play icon -->
     <ion-icon class="tile is-2 icon is-medium" name="play-outline"></ion-icon>
     <!--    date  -->
-    {{ form.date(class="input tile is-child") }}
+    {{ form.date(class="input tile is-child is-3") }}
     <div>&nbsp;&nbsp;</div>
     <!--    time -->
-    <div class="control has-icons-right tile">
+    <div class="control has-icons-right tile is-3">
         {{ form.time(class="input tile is-child") }}
-        <span class="icon is-right">
+        <span class="icon is-right has-text-dark">
             <ion-icon name="time-outline"></ion-icon>
         </span>
     </div>
