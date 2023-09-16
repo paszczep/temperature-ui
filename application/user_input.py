@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from flask_login import login_required
 from .models import Container, Thermometer, Task, Set, Control
 from .form import TaskForm, SetForm
-from .process import execute_task, thread_set, ExecuteSet
+from .process import thread_task, thread_set, ExecuteSet, task_from_dict
 from . import db
 from typing import Union
 from uuid import uuid4
@@ -10,6 +10,7 @@ from humanize import naturaltime
 from time import time
 from datetime import datetime
 from datetime import timedelta
+
 
 user_input = Blueprint('input', __name__)
 
@@ -76,7 +77,7 @@ def task(container):
             reads=[{
                 'temperature': r.temperature,
                 'read_time': r.read_time,
-                'db_time': r.db_time
+                'db_time': naturaltime(timedelta(seconds=(time() - r.db_time)))
             } for r in task_container.task[0].reads] if task_container.task else None
         )
 
@@ -103,7 +104,7 @@ def task(container):
             new_task = create_task_settings(form, task_container)
             new_task.status = 'running'
             db.session.commit()
-            execute_task(task_id=new_task.id)
+            thread_task(new_task.id)
 
     return render_task_form(form, task_container, all_containers)
 

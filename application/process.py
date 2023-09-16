@@ -1,4 +1,4 @@
-from .database import select_from_db
+from .database import select_from_db, update_status_in_db, ExecuteTask, ExecuteSet, task_from_dict
 from threading import Thread
 import sched
 from time import time, sleep
@@ -10,8 +10,6 @@ from pathlib import Path
 from dotenv import dotenv_values
 import logging
 import subprocess
-from dataclasses import dataclass
-from psycopg2 import connect
 
 parent_dir = Path(__file__).parent.parent
 dotenv_dir = parent_dir / '.env'
@@ -21,33 +19,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local = dotenv_values.get("AWS_SECRET_KEY")
-print('run local', run_local)
-
-
-def db_connection_and_cursor():
-
-    db_config = {
-        "host": dotenv_values.get('DB_HOST'),
-        "dbname": dotenv_values.get('DB_NAME'),
-        "user": dotenv_values.get('DB_USER'),
-        "password": dotenv_values.get('DB_PASSWORD'),
-        "port": dotenv_values.get('DB_PORT')
-    }
-
-    db_connection = connect(**db_config)
-    db_cursor = db_connection.cursor()
-    return db_connection, db_cursor
-
-
-@dataclass
-class ExecuteSet:
-    __tablename__ = 'temp_set'
-    id: str
-    status: str
-    temperature: int
-    timestamp: int
-    container: str
+run_local_api = dotenv_values.get("API_LOCAL", True)
 
 
 def key_hash(key: str) -> str:
@@ -76,26 +48,18 @@ def run_lambda(
     return response['Payload'].read().decode("utf-8")
 
 
-def execute_task(task_id: str):
-    run_lambda(task=task_id)
-
-
-def initialize_database():
-    run_lambda(initialize=True)
-
-
-def check_containers():
-    run_lambda(check=True)
-
-
-def execute_set_local(set_id: str):
+def execute_local(
+        initialize: bool = False,
+        check: bool = False,
+        task: Union[str, None] = None,
+        setting: Union[str, None] = None):
     payload = json.dumps({
         "key_1": key_1,
         "key_2": key_hash(key_2),
-        "initialize": False,
-        "check": True,
-        "task": None,
-        "set": set_id
+        "initialize": initialize,
+        "check": check,
+        "task": task,
+        "set": setting
     })
 
     command = f"""
@@ -103,20 +67,30 @@ def execute_set_local(set_id: str):
     subprocess.call(command, shell=True, executable='/bin/bash')
 
 
-def execute_set_temperature(run_set: ExecuteSet):
-    logging.info(f'executing {run_set.container} {run_set.temperature}')
-    # run_lambda(setting=run_set.id)
-    execute_set_local(set_id=run_set.id)
+def initialize_database():
+    if run_local_api:
+        execute_local(initialize=True)
+    else:
+        run_lambda(initialize=True)
 
 
 def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 5):
-    # sleep(30)
-    set_status = select_from_db(ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
-    if set_status == 'running':
-        logging.info(f'scheduling {set_to_go.container} {set_to_go.temperature}')
+    def execute_set_temperature(run_set: ExecuteSet):
+        logging.info(f'executing {run_set.container} {run_set.temperature}')
+        if run_local_api:
+            execute_local(setting=run_set.id)
+        else:
+            run_lambda(setting=run_set.id)
+
+    def schedule_setting():
         scheduler = sched.scheduler(time, sleep)
         scheduler.enterabs(set_to_go.timestamp, 0, execute_set_temperature, kwargs={'run_set': set_to_go})
         scheduler.run()
+
+    # sleep(30)
+    set_status = select_from_db(ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
+    if set_status == 'running':
+        schedule_setting()
         logging.info(f'ran {set_to_go.container} {set_to_go.temperature}')
         set_to_go.timestamp = int(time()) + 60
         if retry:
@@ -132,70 +106,40 @@ def thread_set(executed_set: ExecuteSet):
     thread.start()
 
 
-@dataclass
-class ExecuteTask:
-    __tablename__ = 'task'
-    id: str
-    start: int
-    duration: int
-    t_start: int
-    t_min: int
-    t_max: int
-    t_freeze: int
-    status: str
-    container: str
-    reads: list
-    controls: list
-
-
-def task_from_dict(t: dict) -> ExecuteTask:
-    return ExecuteTask(
-        id=t['id'],
-        start=t['start'],
-        duration=t['duration'],
-        t_start=t['t_start'],
-        t_min=t['t_min'],
-        t_max=t['t_max'],
-        t_freeze=t['t_freeze'],
-        status=t['status'],
-        container='',
-        reads=list(),
-        controls=list()
-    )
-
-
-def execute_task_local(task_id: str):
-    payload = json.dumps({
-        "key_1": key_1,
-        "key_2": key_hash(key_2),
-        "initialize": False,
-        "check": True,
-        "task": task_id,
-        "set": None
-    })
-
-    command = f"""
-    curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{payload}'"""
-    subprocess.call(command, shell=True, executable='/bin/bash')
-
-
-def schedule_temperature_check(schedule_task_id: str):
+def schedule_temperature_task(schedule_task_id: str):
     def get_task_at_hand() -> ExecuteTask:
         return [task_from_dict(t) for t in select_from_db(
                 table_name=ExecuteTask.__tablename__,
                 where_condition={'id': schedule_task_id},
                 keys=True)].pop()
 
+    def do_execute_task(exec_task_id: str):
+        if run_local_api:
+            execute_local(task=exec_task_id)
+        else:
+            run_lambda(task=exec_task_id)
+
+    def schedule_task(scheduled_task: ExecuteTask):
+        scheduler = sched.scheduler(time, sleep)
+        scheduler.enterabs(scheduled_task.start, 0, do_execute_task, kwargs={'exec_task_id': scheduled_task.id})
+        scheduler.run()
+
+    def end_task(ended_task: ExecuteTask):
+        task_at_hand.status = 'ended'
+        update_status_in_db(ended_task)
+
     task_at_hand = get_task_at_hand()
     if task_at_hand.status == 'running':
-        scheduler = sched.scheduler(time, sleep)
-        scheduler.enterabs(task_at_hand.start, 0, execute_task_local, kwargs={'task_id': task_at_hand})
-        scheduler.run()
+        schedule_task(task_at_hand)
         if time() < task_at_hand.start + task_at_hand.duration:
-            sleep(10)
-            schedule_temperature_check(schedule_task_id)
+            sleep(15*60)
+            schedule_temperature_task(schedule_task_id)
+        else:
+            end_task(task_at_hand)
+    elif task_at_hand.status == 'cancelled':
+        end_task(task_at_hand)
 
 
-def thread_task(execute_task: ExecuteTask):
-    thread = Thread(target=schedule_temperature_check, args=[execute_task])
+def thread_task(threaded_task_id: str):
+    thread = Thread(target=schedule_temperature_task, args=[threaded_task_id])
     thread.start()

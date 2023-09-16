@@ -1,8 +1,18 @@
+# from flask import render_template
 from flask_wtf import FlaskForm
 from wtforms.fields import DateField, TimeField, StringField, SubmitField, IntegerField
 from wtforms.validators import Length, InputRequired
 from wtforms_alchemy import QuerySelectMultipleField
 from wtforms import widgets
+#
+# def save_button() -> str:
+#     return render_template("""<ion-icon name="save"></ion-icon>""")
+#
+# def go_button() -> str:
+#     return render_template("""<ion-icon name="play"></ion-icon>""")
+#
+# def cancel_button() -> str:
+#     return render_template("""<ion-icon name="close"></ion-icon>""")
 
 
 class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):

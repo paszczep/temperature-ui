@@ -4,7 +4,8 @@
 <div class="block">
     {% include "components/select_container.html" %}
 
-    <div class="box has-background-grey task-box">
+
+    <div class="box has-background-grey">
         {% include "components/select_action.html" %}
         <form method="POST">
             <div class="columns is-centered level">
@@ -18,16 +19,17 @@
                     {% include "components/measures.html" %}
                 </div>
                 </div>
-            {% if reads %}
-            {% include "components/reads.html" %}
-            {% endif %}
             {% include "components/buttons.html" %}
 
             {{ form.csrf_token }}
         </form>
-
-
     </div>
+
+    {% if reads %}
+    <div class="box has-background-grey">
+    {% include "components/reads.html" %}
+    </div>
+    {% endif %}
 
 </div>
 {% endblock %}

@@ -72,7 +72,7 @@ class Read(db.Model):
     __tablename__ = 'read'
     id = db.Column(db.String(36), primary_key=True)
     temperature = db.Column(db.String(10))
-    read_time = db.Column(db.Integer)
+    read_time = db.Column(db.String(25))
     db_time = db.Column(db.Integer)
     thermometer = db.Column(db.String(10))
     task = db.relationship("Task", secondary="task_reads", back_populates="reads")
