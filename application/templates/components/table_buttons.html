@@ -1,4 +1,4 @@
-<div class="buttons block">
+<div class="row-container-always buttons block">
 
     <form action="{{ url_for('control.check') }}" method="post">
         <button class="button is-link is-outlined" type="submit">
@@ -30,7 +30,7 @@
         </form>
 
     {% else %}
-           <button class="button is-danger is-outlined is-static" type="submit">
+           <button class="button is-warning is-outlined is-static" type="submit">
             <ion-icon class="icon is-large" name="play-circle"></ion-icon>
         </button>
 

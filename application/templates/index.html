@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="hero section buttons">
-    <a class="button is-large is-success" href="{{ url_for('control.tasks') }}">
-            {% include "components/logo.html" %}
+<div class="columns center">
+    <div class="column is-3 center">
+        <div class="buttons box center">
+            <a class="button is-large is-success" href="{{ url_for('control.tasks') }}">
+                    {% include "components/logo.html" %}
+            </a>
+          </div>
 
-    </a>
-  </div>
+    </div>
+
+</div>
+
 
 {% endblock %}

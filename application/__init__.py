@@ -4,6 +4,12 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from pathlib import Path
 from dotenv import dotenv_values
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s: %(message)s'
+)
 
 parent_dir = Path(__file__).parent.parent
 dotenv_dir = parent_dir / '.env'

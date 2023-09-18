@@ -5,7 +5,7 @@
             </span>
     </a>
     {% if '/set/' in url_for(request.endpoint, container=task_container.name) %}
-     <a class="button is-outlined is-inverted is-large" href="{{ url_for('input.temp_set', container=task_container.name) }}">
+     <a class="button is-primary is-outlined is-inverted is-large" href="{{ url_for('input.temp_set', container=task_container.name) }}">
         <span class="icon is-large">
                 <ion-icon name="refresh-outline"></ion-icon>
             </span>
@@ -21,8 +21,11 @@
 
 
 
-    {% if '/set/' in url_for(request.endpoint, container=task_container.name) or task_container.task %}
-        <a class="button is-large is-static is-primary">
+    {% if '/set/' in url_for(request.endpoint, container=task_container.name)%}
+        <a class="button is-large is-primary is-static is-focused has-text-primary">
+
+    {% elif task_container.task %}
+        <a class="button is-large is-primary" disabled>
     {% else %}
         <a class="button is-large is-primary" href="{{ url_for('input.temp_set', container=task_container.name) }}">
     {% endif %}
@@ -30,8 +33,12 @@
                 <ion-icon name="alarm-outline"></ion-icon>
             </span>
         </a>
-    {% if '/task/' in url_for(request.endpoint, container=task_container.name) or task_container.set %}
-            <a class="button is-large is-static is-primary">
+
+    {% if '/task/' in url_for(request.endpoint, container=task_container.name)%}
+            <a class="button is-large is-primary is-static is-focused has-text-primary">
+
+    {% elif task_container.set %}
+            <a class="button is-large is-primary" disabled>
     {% else %}
             <a class="button is-large is-primary" href="{{ url_for('input.task', container=task_container.name) }}">
     {% endif %}
