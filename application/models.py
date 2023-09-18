@@ -2,6 +2,7 @@ from . import db
 from flask_login import UserMixin
 
 
+
 class AppUser(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
@@ -88,43 +89,43 @@ class Set(db.Model):
     controls = db.relationship("Control", secondary="set_controls", back_populates="set")
 
 
-db.Table(
+data_objects = (Control, Check, Task, Read, Set)
+
+
+container_set = db.Table(
     "container_set",
     db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
     db.Column("set_id", db.ForeignKey("temp_set.id"), primary_key=True)
 )
 
-
-db.Table(
+container_thermometers = db.Table(
     "container_thermometers",
     db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
     db.Column("thermometer_id", db.ForeignKey("thermometer.device_id"), primary_key=True)
 )
 
-
-db.Table(
+container_task = db.Table(
     "container_task",
     db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
     db.Column("task_id", db.ForeignKey("task.id"), primary_key=True)
 )
 
-
-db.Table(
+task_controls = db.Table(
     "task_controls",
     db.Column("task_id", db.ForeignKey("task.id"), primary_key=True),
     db.Column("control_id", db.ForeignKey("control.id"), primary_key=True)
 )
 
-
-db.Table(
+set_controls = db.Table(
     "set_controls",
     db.Column("set_id", db.ForeignKey("temp_set.id"), primary_key=True),
     db.Column("control_id", db.ForeignKey("control.id"), primary_key=True)
 )
 
-
-db.Table(
+task_reads = db.Table(
     "task_reads",
     db.Column("task_id", db.ForeignKey("task.id"), primary_key=True),
     db.Column("read_id", db.ForeignKey("read.id"), primary_key=True)
 )
+
+relationship_objects = [container_set, container_thermometers, container_task, task_controls, set_controls, task_reads]

@@ -1,7 +1,8 @@
 {% if reads %}
 {% endif %}
 
-<table class="table is-dark is-striped is-narrow">
+<div class="column hero has-background-grey">
+<table class="table is-grey is-hoverable has-background-grey has-text-dark">
     <thead>
     <tr>
         <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
@@ -10,7 +11,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for read in reads[:5] %}
+    {% for read in reads %}
         <tr class="read-row">
             <td>{{ read.db_time }}</td>
             <td>{{ read.read_time }}</td>
@@ -19,3 +20,4 @@
     {% endfor %}
     </tbody>
 </table>
+    </div>

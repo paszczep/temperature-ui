@@ -2,7 +2,7 @@
 {% block content %}
 <div class="columns is-multiline center tile is-vertical">
 <div class="column hero box has-background-grey">
-<table class="table is-grey is-hoverable has-background-grey has-text-dark">
+<table class="table is-hoverable has-background-grey">
     <thead>
     <tr>
         <th class="has-text-link"><!--id--></th>
@@ -37,13 +37,13 @@
     </tbody>
 </table>
 </div>
-<div class="column tile center is-parent">
-    <div class="tile center">
+<div class="columns is-centered">
+    <div class="column is-7">
     {% include "components/table_buttons.html" %}
     </div>
-    <div class="tile center border-pad">
+    <div class="column is-7">
     {% if refresh %}
-        {{ refresh }}
+        <div class="p is-size-4">{{ refresh }}</div>
     {% endif %}
     </div>
 

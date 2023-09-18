@@ -21,6 +21,11 @@ aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
 run_local_api = dotenv_values.get("API_LOCAL", True)
 
+if not run_local_api:
+    logging.info('running external api')
+else:
+    logging.info('running external api')
+
 
 def key_hash(key: str) -> str:
     return sha256(key.encode("utf-8")).hexdigest()
@@ -74,6 +79,13 @@ def initialize_database():
         run_lambda(initialize=True)
 
 
+def check_containers():
+    if run_local_api:
+        execute_local(check=True)
+    else:
+        run_lambda(check=True)
+
+
 def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 5):
     def execute_set_temperature(run_set: ExecuteSet):
         logging.info(f'executing {run_set.container} {run_set.temperature}')
@@ -87,18 +99,32 @@ def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 5):
         scheduler.enterabs(set_to_go.timestamp, 0, execute_set_temperature, kwargs={'run_set': set_to_go})
         scheduler.run()
 
-    # sleep(30)
-    set_status = select_from_db(ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
-    if set_status == 'running':
+    def schedule_and_retry_setting(setting_retry: int):
         schedule_setting()
         logging.info(f'ran {set_to_go.container} {set_to_go.temperature}')
         set_to_go.timestamp = int(time()) + 60
-        if retry:
+        if setting_retry:
             logging.info('checking and possible retry of setting')
-            retry -= 1
-            schedule_temperature_setting(set_to_go, retry)
+            setting_retry -= 1
+            schedule_temperature_setting(set_to_go, setting_retry)
         else:
+            set_to_go.status = 'error'
+            update_status_in_db(set_to_go)
             logging.info(f'failed {set_to_go.container} {set_to_go.temperature}')
+
+    def update_set_status():
+        set_to_go.status = select_from_db(ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
+
+    def end_set(ended_set: ExecuteSet):
+        ended_set.status = 'ended'
+        update_status_in_db(ended_set)
+
+    # sleep(30)
+    update_set_status()
+    if set_to_go.status == 'running':
+        schedule_and_retry_setting(retry)
+    elif set_to_go.status == 'cancelled':
+        end_set(set_to_go)
 
 
 def thread_set(executed_set: ExecuteSet):
@@ -107,11 +133,12 @@ def thread_set(executed_set: ExecuteSet):
 
 
 def schedule_temperature_task(schedule_task_id: str):
-    def get_task_at_hand() -> ExecuteTask:
-        return [task_from_dict(t) for t in select_from_db(
+    def get_task_at_hand() -> Union[ExecuteTask, None]:
+        select_tasks = select_from_db(
                 table_name=ExecuteTask.__tablename__,
                 where_condition={'id': schedule_task_id},
-                keys=True)].pop()
+                keys=True)
+        return [task_from_dict(t) for t in select_tasks].pop() if select_tasks else None
 
     def do_execute_task(exec_task_id: str):
         if run_local_api:
@@ -129,15 +156,16 @@ def schedule_temperature_task(schedule_task_id: str):
         update_status_in_db(ended_task)
 
     task_at_hand = get_task_at_hand()
-    if task_at_hand.status == 'running':
-        schedule_task(task_at_hand)
-        if time() < task_at_hand.start + task_at_hand.duration:
-            sleep(15*60)
-            schedule_temperature_task(schedule_task_id)
-        else:
+    if task_at_hand:
+        if task_at_hand.status == 'running':
+            schedule_task(task_at_hand)
+            if time() < task_at_hand.start + task_at_hand.duration:
+                sleep(10*60)
+                schedule_temperature_task(schedule_task_id)
+            else:
+                end_task(task_at_hand)
+        elif task_at_hand.status == 'cancelled':
             end_task(task_at_hand)
-    elif task_at_hand.status == 'cancelled':
-        end_task(task_at_hand)
 
 
 def thread_task(threaded_task_id: str):

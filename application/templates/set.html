@@ -8,21 +8,21 @@
 
         <form method="POST">
             <div class="columns is-multiline is-centered">
-                <div class="column is-6 tile is-vertical">
+                <div class="column is-5 tile is-vertical">
                     {% include "components/name.html" %}
                     {% include "components/temp_set.html" %}
                     {% include "components/beginning.html" %}
 
                 </div>
                 {% if controls %}
-                <div class="column is-5 tile is-vertical">
+                <div class="column is-3 tile is-vertical">
                     {% include "components/control_steps.html" %}
                 </div>
                 {% endif %}
 
             </div>
-            <div class="columns is-multiline is-centered">
-                <div class="column is-centered">{% include "components/buttons.html" %}</div>
+            <div class="columns is-centered">
+                <div class="column">{% include "components/buttons.html" %}</div>
             </div>
             {{ form.csrf_token }}
         </form>

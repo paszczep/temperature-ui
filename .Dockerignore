@@ -4,6 +4,10 @@ __pycache__
 .idea
 migrations
 local.env
-.env
+launch.sh
 access_db
-temp_ui.zip
+README.md
+run_loc.sh
+restart_db.sh
+.gitignore
+.git

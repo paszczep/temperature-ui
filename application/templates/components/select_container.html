@@ -5,17 +5,17 @@
     {% if not cont.set and (cont.task or '/task/' in url_for(request.endpoint, container=task_container.name)) %}
 
         {% if cont == task_container: %}
-            <a class="button is-active" href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
+            <a class="button is-info is-outlined is-focused has-text-light" href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
         {% else %}
-            <a class="button" href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
+            <a class="button is-info is-outlined" href="{{ url_for('input.task', container=cont.name) }}">{{ cont.label }}</a>
         {% endif %}
 
     {% else %}
 
         {% if cont == task_container: %}
-            <a class="button is-active" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
+            <a class="button is-info is-outlined is-focused has-text-grey" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
         {% else %}
-            <a class="button" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
+            <a class="button is-info is-outlined" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
         {% endif %}
 
     {% endif %}

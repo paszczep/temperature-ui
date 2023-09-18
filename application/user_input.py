@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-from .models import Container, Thermometer, Task, Set, Control
+from .models import Container, Thermometer, Task, Set
 from .form import TaskForm, SetForm
-from .process import thread_task, thread_set, ExecuteSet, task_from_dict
+from .process import thread_task, thread_set, ExecuteSet
 from . import db
 from typing import Union
 from uuid import uuid4
@@ -22,40 +22,40 @@ def timestamp_from_selection(form: Union[TaskForm, SetForm]) -> int:
 
 @user_input.route("/task/<container>", methods=["POST", "GET"])
 @login_required
-def task(container):
-    def create_task(form: TaskForm) -> Task:
+def task(container: str):
+    def create_task(created_task_form: TaskForm) -> Task:
         return Task(
             id=str(uuid4()),
-            start=timestamp_from_selection(form),
-            duration=form.hours.data * 3600 + form.minutes.data * 60,
-            t_start=form.t_start.data,
-            t_min=form.t_min.data,
-            t_max=form.t_max.data,
-            t_freeze=form.t_freeze.data,
+            start=timestamp_from_selection(created_task_form),
+            duration=created_task_form.hours.data * 3600 + created_task_form.minutes.data * 60,
+            t_start=created_task_form.t_start.data,
+            t_min=created_task_form.t_min.data,
+            t_max=created_task_form.t_max.data,
+            t_freeze=created_task_form.t_freeze.data,
             status='new',
         )
 
-    def retrieve_task(task_container: Container) -> Union[Task, None]:
-        old_task = task_container.task
+    def retrieve_task(retrieved_task_container: Container) -> Union[Task, None]:
+        old_task = retrieved_task_container.task
         return old_task[0] if old_task else None
 
     def create_task_settings(
-            form: TaskForm,
-            task_container: Container,
+            created_task_form: TaskForm,
+            created_task_container: Container,
     ) -> Task:
-        created_task = create_task(form)
+        created_task = create_task(created_task_form)
         db.session.add(created_task)
-        task_container.task.clear()
-        task_container.task = [created_task]
-        task_container.thermometers.clear()
-        task_container.thermometers.extend(form.choices.data)
-        task_container.label = form.name.data
+        created_task_container.task.clear()
+        created_task_container.task = [created_task]
+        created_task_container.thermometers.clear()
+        created_task_container.thermometers.extend(created_task_form.choices.data)
+        created_task_container.label = created_task_form.name.data
         return created_task
 
-    def form_data(task_container: Container, old_task: Union[Task, None]) -> dict:
+    def form_data(tasked_container: Container, old_task: Union[Task, None]) -> dict:
         return {
-            "name": task_container.label,
-            "choices": task_container.thermometers,
+            "name": tasked_container.label,
+            "choices": tasked_container.thermometers,
             "date": (start := datetime.fromtimestamp(old_task.start)).date() if old_task else (
                 now := datetime.now()).date(),
             "time": start.time() if old_task else now.time(),
@@ -67,19 +67,30 @@ def task(container):
             "t_freeze": old_task.t_freeze if old_task else -20
         }
 
-    def render_task_form(form: TaskForm, task_container: Container, all_containers: list[Container]):
+    def render_task_form(
+            render_form: TaskForm,
+            render_container: Container,
+            all_render_containers: list[Container]):
         return render_template(
             "task.html",
-            form=form,
-            task_container=task_container,
-            all_containers=all_containers,
-            status=task_container.task[0].status if task_container.task else None,
+            form=render_form,
+            task_container=render_container,
+            all_containers=all_render_containers,
+            status=render_container.task[0].status if render_container.task else None,
             reads=[{
                 'temperature': r.temperature,
                 'read_time': r.read_time,
                 'db_time': naturaltime(timedelta(seconds=(time() - r.db_time)))
-            } for r in task_container.task[0].reads] if task_container.task else None
+            } for r in render_container.task[0].reads] if render_container.task else None
         )
+
+    def cancel_task(cancelled_task: Union[Task, None]):
+        if cancelled_task:
+            if cancelled_task.status in ('new', 'ended', 'cancelled'):
+                db.session.delete(cancelled_task)
+            elif cancelled_task.status == 'running':
+                cancelled_task.status = 'cancelled'
+            db.session.commit()
 
     def delete_old_task(del_task: Task):
         if del_task:
@@ -93,8 +104,7 @@ def task(container):
 
     if form.validate_on_submit():
         if form.cancel.data:
-            delete_old_task(existing_task)
-            db.session.commit()
+            cancel_task(existing_task)
         if form.save.data:
             delete_old_task(existing_task)
             create_task_settings(form, task_container)
@@ -112,8 +122,8 @@ def task(container):
 @user_input.route("/set/<container>", methods=["POST", "GET"])
 @login_required
 def temp_set(container):
-    def retrieve_set(set_container: Container) -> Union[Task, None]:
-        old_set = set_container.set
+    def retrieve_set(retrieve_set_container: Container) -> Union[Task, None]:
+        old_set = retrieve_set_container.set
         return old_set[0] if old_set else None
 
     def save_set_to_db(created_set: Set, old_set: Union[Set, None]):
@@ -122,13 +132,13 @@ def temp_set(container):
         db.session.add(created_set)
         db.session.commit()
 
-    def create_set(set_form: SetForm, set_container: Container) -> Set:
+    def create_set(creared_set_form: SetForm, created_set_container: Container) -> Set:
         return Set(
             id=str(uuid4()),
             status='new',
-            temperature=set_form.temperature.data,
-            timestamp=timestamp_from_selection(set_form),
-            container=[set_container]
+            temperature=creared_set_form.temperature.data,
+            timestamp=timestamp_from_selection(creared_set_form),
+            container=[created_set_container]
         )
 
     def cancel_set(cancelled_set: Union[Set, None]):
@@ -139,25 +149,28 @@ def temp_set(container):
                 cancelled_set.status = 'cancelled'
             db.session.commit()
 
-    def set_data(set_container: Container, old_set: Union[Set, None]) -> dict:
+    def set_data(target_container: Container, old_set: Union[Set, None]) -> dict:
         now = datetime.now()
-        return {'name': set_container.label,
+        return {'name': target_container.label,
                 'date': (set_datetime := datetime.fromtimestamp(old_set.timestamp)).date() if old_set else now.date(),
                 'time': set_datetime.time() if old_set else now.time(),
                 'temperature': old_set.temperature if old_set else 0
                 }
 
-    def render_set_template(form: SetForm, container: Container, all_containers: list[Container]):
+    def render_set_template(
+            rendered_set_form: SetForm,
+            form_container: Container,
+            rendered_all_containers: list[Container]):
         return render_template(
             "set.html",
-            form=form,
-            task_container=container,
-            all_containers=all_containers,
-            status=container.set[0].status if container.set else None,
+            form=rendered_set_form,
+            task_container=form_container,
+            all_containers=rendered_all_containers,
+            status=form_container.set[0].status if form_container.set else None,
             controls=[{
                 'timestamp': naturaltime(timedelta(seconds=(time() - ctrl.timestamp))),
                 'temperature': ctrl.target_setpoint
-            } for ctrl in container.set[0].controls] if container.set else None)
+            } for ctrl in form_container.set[0].controls] if form_container.set else None)
 
     set_container = Container.query.get(container)
     all_containers = Container.query.all()

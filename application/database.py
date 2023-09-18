@@ -51,20 +51,6 @@ def task_from_dict(t: dict) -> ExecuteTask:
     )
 
 
-def db_connection_and_cursor():
-    db_config = {
-        "host": dotenv_values.get('DB_HOST'),
-        "dbname": dotenv_values.get('DB_NAME'),
-        "user": dotenv_values.get('DB_USER'),
-        "password": dotenv_values.get('DB_PASSWORD'),
-        "port": dotenv_values.get('DB_PORT')
-    }
-
-    db_connection = connect(**db_config)
-    db_cursor = db_connection.cursor()
-    return db_connection, db_cursor
-
-
 def _db_connection_and_cursor():
     db_config = {
         "host": dotenv_values.get('DB_HOST'),

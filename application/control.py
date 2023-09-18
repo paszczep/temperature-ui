@@ -2,8 +2,8 @@ from flask import Blueprint, redirect, render_template
 from flask_login import login_required
 from time import time
 from humanize import naturaltime
-from .process import initialize_database, run_lambda
-from .models import Check, Container, Set, Task, Read, Control
+from .process import initialize_database, check_containers
+from .models import Check, Container, Set, Task, Read, Control, data_objects, relationship_objects
 from . import db
 from datetime import timedelta
 
@@ -41,12 +41,13 @@ def init_db():
 
 @control.route("/control/delete", methods=["POST"])
 @login_required
-def delete_checks():
-    db.session.query(Check).delete()
-    db.session.query(Set).delete()
-    db.session.query(Task).delete()
-    db.session.query(Read).delete()
-    db.session.query(Control).delete()
+def delete_data():
+
+    for relationship in relationship_objects:
+        db.session.query(relationship).delete()
+
+    for objects in data_objects:
+        db.session.query(objects).delete()
 
     db.session.commit()
     return redirect('/control')
@@ -57,6 +58,6 @@ def delete_checks():
 def check():
     Check.query.where(Check.timestamp < (int(time()) - 24*60*60)).delete()
     db.session.commit()
-    run_lambda(check=True)
+    check_containers()
     return redirect('/control')
 
