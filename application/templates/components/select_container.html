@@ -13,7 +13,7 @@
     {% else %}
 
         {% if cont == task_container: %}
-            <a class="button is-info is-outlined is-focused has-text-grey" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
+            <a class="button is-info is-outlined is-focused has-text-light" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
         {% else %}
             <a class="button is-info is-outlined" href="{{ url_for('input.temp_set', container=cont.name) }}">{{ cont.label }}</a>
         {% endif %}

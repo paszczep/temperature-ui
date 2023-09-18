@@ -23,7 +23,7 @@
     &nbsp;
     {% if not containers %}
 
-        <form class="a" action="{{ url_for('control.init_db') }}" method="post">
+        <form action="{{ url_for('control.init_db') }}" method="post">
             <button class="button is-danger is-outlined" type="submit">
                 <ion-icon class="icon is-large" name="play-circle"></ion-icon>
             </button>

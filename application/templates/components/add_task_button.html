@@ -1,5 +1,5 @@
 {% if not container.set %}
-<a class="button is-medium is-dark center" href="{{ url_for('input.task', container=container.name) }}">
+<a class="button is-medium is-primary center" href="{{ url_for('input.task', container=container.name) }}">
     {% if container.task %}
 <!--        {{ container.task[0].status }}-->
             {% set task_status = container.task[0].status %}
@@ -9,5 +9,5 @@
     {% endif %}
 </a>
 {% else %}
-<a class="button is-medium is-dark center" disabled><ion-icon class="icon is-medium" name="add"></ion-icon></a>
+<a class="button is-medium is-primary center" disabled><ion-icon class="icon is-medium" name="add"></ion-icon></a>
 {% endif %}
