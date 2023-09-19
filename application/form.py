@@ -4,15 +4,17 @@ from wtforms.fields import DateField, TimeField, StringField, SubmitField, Integ
 from wtforms.validators import Length, InputRequired
 from wtforms_alchemy import QuerySelectMultipleField
 from wtforms import widgets
-#
+from markupsafe import Markup
+
 # def save_button() -> str:
 #     return render_template("""<ion-icon name="save"></ion-icon>""")
 #
 # def go_button() -> str:
 #     return render_template("""<ion-icon name="play"></ion-icon>""")
-#
-# def cancel_button() -> str:
-#     return render_template("""<ion-icon name="close"></ion-icon>""")
+
+
+def cancel_button() -> Markup:
+    return Markup("""<ion-icon name="close"></ion-icon>""")
 
 
 class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):

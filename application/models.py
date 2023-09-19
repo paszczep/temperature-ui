@@ -128,4 +128,4 @@ task_reads = db.Table(
     db.Column("read_id", db.ForeignKey("read.id"), primary_key=True)
 )
 
-relationship_objects = [container_set, container_thermometers, container_task, task_controls, set_controls, task_reads]
+relationship_objects = [container_set, container_task, task_controls, set_controls, task_reads]

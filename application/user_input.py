@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-from .models import Container, Thermometer, Task, Set
+from .models import Container, Thermometer, Task, Set, Check
 from .form import TaskForm, SetForm
 from .process import thread_task, thread_set, ExecuteSet
 from . import db
@@ -59,8 +59,8 @@ def task(container: str):
             "date": (start := datetime.fromtimestamp(old_task.start)).date() if old_task else (
                 now := datetime.now()).date(),
             "time": start.time() if old_task else now.time(),
-            "hours": (hours := old_task.duration // 3600 if old_task else 30),
-            "minutes": (old_task.duration - hours*3600) / 60 if old_task else 0,
+            "hours": (hours := old_task.duration // 3600 if old_task else 1),
+            "minutes": (old_task.duration - hours*3600) / 60 if old_task else 15,
             "t_start": old_task.t_start if old_task else 40,
             "t_max": old_task.t_max if old_task else 40,
             "t_min": old_task.t_min if old_task else 30,
@@ -157,6 +157,12 @@ def temp_set(container):
                 'temperature': old_set.temperature if old_set else 0
                 }
 
+    def retrieve_recent_container_check(checked_container: Container) -> Union[Check, None]:
+        recent_container_check = db.session.query(Check).filter(
+                Check.container == checked_container.name).order_by(
+                Check.timestamp.desc()).first()
+        return recent_container_check
+
     def render_set_template(
             rendered_set_form: SetForm,
             form_container: Container,
@@ -167,6 +173,7 @@ def temp_set(container):
             task_container=form_container,
             all_containers=rendered_all_containers,
             status=form_container.set[0].status if form_container.set else None,
+            setpoint_check=retrieve_recent_container_check(form_container),
             controls=[{
                 'timestamp': naturaltime(timedelta(seconds=(time() - ctrl.timestamp))),
                 'temperature': ctrl.target_setpoint

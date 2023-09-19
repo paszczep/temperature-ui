@@ -4,19 +4,19 @@
 <div class="column hero box has-background-grey">
 <table class="table is-hoverable has-background-grey">
     <thead>
-    <tr>
-        <th class="has-text-link"><!--id--></th>
-        <th class="has-text-light"><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
-        <th class="has-text-light"><ion-icon class="icon is-medium" name="power"></ion-icon></th>
-        <th class="has-text-light"><ion-icon class="icon is-medium" name="thermometer-outline"></ion-icon></th>
-        <th class="has-text-light"><ion-icon class="icon is-medium" name="airplane-outline"></ion-icon></th>
-        <th class="has-text-light"><ion-icon class="icon is-medium" name="alarm-outline"></ion-icon></th>
+    <tr class="has-text-dark">
+        <th><!--id--></th>
+        <th><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
+        <th ><ion-icon class="icon is-medium" name="power"></ion-icon></th>
+        <th><ion-icon class="icon is-medium" name="thermometer-outline"></ion-icon></th>
+        <th><ion-icon class="icon is-medium" name="airplane-outline"></ion-icon></th>
+        <th><ion-icon class="icon is-medium" name="alarm-outline"></ion-icon></th>
     </tr>
     </thead>
     <tbody>
     {% for container in containers %}
 
-    <tr>
+    <tr class="has-text-dark">
         <td>{{ container.name[-2:] }}</td>
         <td>{{ container.label }}</td>
         {% if checks %}
@@ -37,14 +37,18 @@
     </tbody>
 </table>
 </div>
-<div class="columns is-centered">
-    <div class="column is-7">
+<div class="columns">
+    <div class="column row-container">
     {% include "components/table_buttons.html" %}
     </div>
     <div class="column is-7">
+        <div class="p is-size-4">
     {% if refresh %}
-        <div class="p is-size-4">{{ refresh }}</div>
+        {{ refresh }}
+    {% else %}
+           <ion-icon class="icon is-medium" name="eye-off-outline"></ion-icon>
     {% endif %}
+        </div>
     </div>
 
 </div>

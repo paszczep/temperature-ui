@@ -15,10 +15,11 @@
         </form>
 
     {% else %}
+    <form>
             <button class="button is-danger is-outlined is-static" type="submit">
                 <ion-icon class="icon is-large" name="trash"></ion-icon>
             </button>
-
+    </form>
     {% endif %}
     &nbsp;
     {% if not containers %}
@@ -30,7 +31,7 @@
         </form>
 
     {% else %}
-           <button class="button is-warning is-outlined" disabled type="submit">
+        <button class="button is-warning is-outlined" disabled type="submit">
             <ion-icon class="icon is-large" name="play-circle"></ion-icon>
         </button>
 

@@ -155,7 +155,7 @@ def schedule_temperature_task(schedule_task_id: str):
         if task_at_hand.status == 'running':
             schedule_task(task_at_hand)
             if time() < task_at_hand.start + task_at_hand.duration:
-                sleep(10*60)
+                sleep(15*60)
                 schedule_temperature_task(schedule_task_id)
             else:
                 end_task(task_at_hand)
