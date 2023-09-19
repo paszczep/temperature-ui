@@ -4,7 +4,7 @@ __pycache__
 .idea
 migrations
 local.env
-launch.sh
+build.sh
 access_db
 README.md
 run_loc.sh

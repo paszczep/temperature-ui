@@ -19,12 +19,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local_api = dotenv_values.get("API_LOCAL", True)
-
-if not run_local_api:
-    logging.info('running external api')
-else:
-    logging.info('running external api')
+run_local_api = False
 
 
 def key_hash(key: str) -> str:
@@ -102,7 +97,7 @@ def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 5):
     def schedule_and_retry_setting(setting_retry: int):
         schedule_setting()
         logging.info(f'ran {set_to_go.container} {set_to_go.temperature}')
-        set_to_go.timestamp = int(time()) + 60
+        set_to_go.timestamp = int(time()) + 3*60
         if setting_retry:
             logging.info('checking and possible retry of setting')
             setting_retry -= 1

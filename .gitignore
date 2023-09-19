@@ -7,3 +7,5 @@ local.env
 .env
 access_db
 temp_ui.zip
+temp_ui.pem
+ec2_ojoj

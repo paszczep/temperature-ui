@@ -7,7 +7,7 @@ from dotenv import dotenv_values
 import logging
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s: %(message)s'
 )
 
@@ -59,4 +59,6 @@ def create_app():
 
     return app
 
+
+app = create_app()
 
