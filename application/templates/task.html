@@ -15,10 +15,19 @@
                     {% include "components/duration.html" %}
                     {% include "components/temp_band.html" %}
                 </div>
+
                 <div class="column is-5">
                     {% include "components/measures.html" %}
                 </div>
-                </div>
+
+                {% if controls %}
+                    <div class="column is-4">
+                        {% include "components/control_steps.html" %}
+                    </div>
+                {% endif %}
+
+
+            </div>
             {% include "components/buttons.html" %}
 
             {{ form.csrf_token }}

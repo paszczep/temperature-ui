@@ -70,7 +70,7 @@ def select_from_db(
         select_columns: Union[list, None] = None,
         where_condition: Union[dict, None] = None,
         keys: bool = True
-) -> Union[list, list[dict]]:
+) -> Union[list[str], list[dict]]:
 
     def col_str(columns: list):
         if not columns:
@@ -93,11 +93,12 @@ def select_from_db(
         select_cursor.execute(select_query)
         values = select_cursor.fetchall()
         if not keys:
-            return [val[0] for val in values]
-        names = [description[0] for description in select_cursor.description]
-        keyed_values = [dict(zip(names, row)) for row in values]
+            return_values = [val[0] for val in values]
+        elif keys:
+            names = [description[0] for description in select_cursor.description]
+            return_values = [dict(zip(names, row)) for row in values]
 
-    return keyed_values
+    return return_values
 
 
 def update_status_in_db(update_object: object):

@@ -81,12 +81,16 @@ def task(container: str):
                 'temperature': r.temperature,
                 'read_time': r.read_time,
                 'db_time': naturaltime(timedelta(seconds=(time() - r.db_time)))
-            } for r in render_container.task[0].reads] if render_container.task else None
+            } for r in render_container.task[0].reads] if render_container.task else None,
+            controls=[{
+                'timestamp': naturaltime(timedelta(seconds=(time() - ctrl.timestamp))),
+                'temperature': ctrl.target_setpoint
+            } for ctrl in render_container.task[0].controls] if render_container.task else None
         )
 
     def cancel_task(cancelled_task: Union[Task, None]):
         if cancelled_task:
-            if cancelled_task.status in ('new', 'ended', 'cancelled'):
+            if cancelled_task.status in ('new', 'ended', 'cancelled', 'error'):
                 db.session.delete(cancelled_task)
             elif cancelled_task.status == 'running':
                 cancelled_task.status = 'cancelled'
@@ -143,7 +147,7 @@ def temp_set(container):
 
     def cancel_set(cancelled_set: Union[Set, None]):
         if cancelled_set:
-            if cancelled_set.status in ('new', 'ended', 'cancelled'):
+            if cancelled_set.status in ('new', 'ended', 'cancelled', 'error'):
                 db.session.delete(cancelled_set)
             elif cancelled_set.status == 'running':
                 cancelled_set.status = 'cancelled'

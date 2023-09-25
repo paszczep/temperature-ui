@@ -1,15 +1,12 @@
 
 <div class="row-container tile is-parent">
-    <!--    play icon -->
     <ion-icon class="tile is-2 icon is-medium" name="footsteps-sharp"></ion-icon>
-    <div class="tile">
+    <div class="tile is-parent is-vertical">
     {% for ctrl in controls %}
-    <div class="left-pad">
-        {{ ctrl['temperature'] }} °C
-    </div>
-    <div class="left-pad">
-        {{ ctrl['timestamp'] }}
-    </div>
-        {% endfor %}
+        <div class="tile">
+            <div class="left-pad">{{ ctrl['temperature'] }} °C</div>
+            <div class="left-pad">{{ ctrl['timestamp'] }}</div>
+        </div>
+    {% endfor %}
     </div>
 </div>
