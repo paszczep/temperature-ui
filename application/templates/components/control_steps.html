@@ -4,7 +4,7 @@
     <div class="tile is-parent is-vertical">
     {% for ctrl in controls %}
         <div class="tile">
-            <div class="left-pad">{{ ctrl['temperature'] }} °C</div>
+            <div>{{ ctrl['temperature'] }} °C</div>
             <div class="left-pad">{{ ctrl['timestamp'] }}</div>
         </div>
     {% endfor %}

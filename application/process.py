@@ -167,8 +167,8 @@ def schedule_temperature_task(schedule_task_id: str):
                 schedule_temperature_task(schedule_task_id)
             else:
                 end_task(task_at_hand)
-        elif task_at_hand.status == 'cancelled':
-            end_task(task_at_hand)
+        # elif task_at_hand.status == 'cancelled':
+        #     end_task(task_at_hand)
 
 
 def thread_task(threaded_task_id: str):
