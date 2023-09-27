@@ -19,7 +19,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local_api = dotenv_values.get("API_LOCAL")
+run_local_api = True
 
 if run_local_api:
     logging.info('local api')
@@ -101,8 +101,8 @@ def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 4):
 
     def schedule_and_retry_setting(setting_retry: int):
         schedule_setting()
-        logging.info(f'scheduling {set_to_go.container.name} {set_to_go.temperature}')
-        set_to_go.timestamp = int(time()) + 3*60
+        logging.info(f'scheduling setting {set_to_go.container.name} to {set_to_go.temperature}°C')
+        set_to_go.timestamp = int(time()) + 5*60
         if setting_retry:
             logging.info('checking and possible setting')
             setting_retry -= 1
@@ -112,7 +112,7 @@ def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 4):
             update_status_in_db(set_to_go)
             logging.info(f'failed {set_to_go.container.name} {set_to_go.temperature}')
 
-    def update_set_status() -> str:
+    def get_updated_set_status() -> str:
         return select_from_db(ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
 
     def end_set(ended_set: ExecuteSet):
@@ -120,7 +120,10 @@ def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 4):
         update_status_in_db(ended_set)
 
     # sleep(30)
-    set_to_go.status = update_set_status()
+    try:
+        set_to_go.status = get_updated_set_status()
+    except IndexError:
+        exit()
     logging.info(f'setting status {set_to_go.status}')
     if set_to_go.status == 'running':
         schedule_and_retry_setting(retry)
