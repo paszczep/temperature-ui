@@ -70,7 +70,11 @@ def task(container: str):
     def render_task_form(
             render_form: TaskForm,
             render_container: Container,
-            all_render_containers: list[Container]):
+            all_render_containers: list[Container],
+            thermometer_names: dict,
+            render_checks: Union[list[Check], None]
+    ):
+        now_time = time()
         return render_template(
             "task.html",
             form=render_form,
@@ -80,12 +84,17 @@ def task(container: str):
             reads=[{
                 'temperature': r.temperature,
                 'read_time': r.read_time,
-                'db_time': naturaltime(timedelta(seconds=(time() - r.db_time)))
+                'db_time': naturaltime(timedelta(seconds=(now_time - r.db_time))),
+                'thermometer': thermometer_names[r.thermometer]
             } for r in render_container.task[0].reads] if render_container.task else None,
             controls=[{
-                'timestamp': naturaltime(timedelta(seconds=(time() - ctrl.timestamp))),
+                'timestamp': naturaltime(timedelta(seconds=(now_time - ctrl.timestamp))),
                 'temperature': ctrl.target_setpoint
-            } for ctrl in render_container.task[0].controls] if render_container.task else None
+            } for ctrl in render_container.task[0].controls] if render_container.task else None,
+            checks=[{
+                'set_point': c.read_setpoint,
+                'timestamp': naturaltime(timedelta(seconds=(now_time - c.timestamp)))
+            } for c in render_checks]
         )
 
     def cancel_task(cancelled_task: Union[Task, None]):
@@ -104,7 +113,13 @@ def task(container: str):
     all_containers = Container.query.all()
     existing_task = retrieve_task(task_container)
     form = TaskForm(data=form_data(task_container, existing_task))
-    form.choices.query = Thermometer.query.all()
+    all_thermometers = Thermometer.query.all()
+    form.choices.query = all_thermometers
+
+    thermometer_map = {t.device_id: t.device_name for t in all_thermometers}
+    checks = db.session.query(Check).filter(
+        Check.container == task_container.name).filter(
+        Check.timestamp > time() - 48*60*60).order_by(Check.timestamp.desc()).all()
 
     if form.validate_on_submit():
         if form.cancel.data:
@@ -120,7 +135,7 @@ def task(container: str):
             db.session.commit()
             thread_task(new_task.id)
 
-    return render_task_form(form, task_container, all_containers)
+    return render_task_form(form, task_container, all_containers, thermometer_map, checks)
 
 
 @user_input.route("/set/<container>", methods=["POST", "GET"])
@@ -136,12 +151,12 @@ def temp_set(container):
         db.session.add(created_set)
         db.session.commit()
 
-    def create_set(creared_set_form: SetForm, created_set_container: Container) -> Set:
+    def create_set(created_set_form: SetForm, created_set_container: Container) -> Set:
         return Set(
             id=str(uuid4()),
             status='new',
-            temperature=creared_set_form.temperature.data,
-            timestamp=timestamp_from_selection(creared_set_form),
+            temperature=created_set_form.temperature.data,
+            timestamp=timestamp_from_selection(created_set_form),
             container=[created_set_container]
         )
 
@@ -170,7 +185,10 @@ def temp_set(container):
     def render_set_template(
             rendered_set_form: SetForm,
             form_container: Container,
-            rendered_all_containers: list[Container]):
+            rendered_all_containers: list[Container],
+            render_checks
+    ):
+        now_time = time()
         return render_template(
             "set.html",
             form=rendered_set_form,
@@ -179,14 +197,22 @@ def temp_set(container):
             status=form_container.set[0].status if form_container.set else None,
             setpoint_check=retrieve_recent_container_check(form_container),
             controls=[{
-                'timestamp': naturaltime(timedelta(seconds=(time() - ctrl.timestamp))),
+                'timestamp': naturaltime(timedelta(seconds=(now_time - ctrl.timestamp))),
                 'temperature': ctrl.target_setpoint
-            } for ctrl in form_container.set[0].controls] if form_container.set else None)
+            } for ctrl in form_container.set[0].controls] if form_container.set else None,
+            checks=[{
+                'set_point': c.read_setpoint,
+                'timestamp': naturaltime(timedelta(seconds=(now_time - c.timestamp)))
+            } for c in render_checks]
+        )
 
     set_container = Container.query.get(container)
     all_containers = Container.query.all()
     existing_set = retrieve_set(set_container)
     set_form = SetForm(data=set_data(set_container, existing_set))
+    checks = db.session.query(Check).filter(
+        Check.container == set_container.name).filter(
+        Check.timestamp > time() - 48*60*60).order_by(Check.timestamp.desc()).all()
 
     if set_form.validate_on_submit():
         if set_form.cancel.data:
@@ -209,4 +235,4 @@ def temp_set(container):
             )
             thread_set(executed_set=executed_set)
 
-    return render_set_template(set_form, set_container, all_containers)
+    return render_set_template(set_form, set_container, all_containers, checks)

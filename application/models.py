@@ -47,7 +47,8 @@ class Thermometer(db.Model):
     container = db.relationship("Container", secondary="container_thermometers", back_populates="thermometers")
 
     def __str__(self):
-        return f'{self.device_name} {self.device_group}'
+        # return f'{self.device_group}'
+        return f'{self.device_name}'
 
 
 class Task(db.Model):

@@ -14,19 +14,26 @@
                     {% include "components/beginning.html" %}
 
                 </div>
-                {% if controls %}
-                <div class="column is-4">
-                    {% include "components/control_steps.html" %}
-                </div>
-                {% endif %}
 
             </div>
             <div class="columns is-centered">
                 <div class="column">{% include "components/buttons.html" %}</div>
             </div>
+
             {{ form.csrf_token }}
         </form>
     </div>
 </div>
+
+
+
+{% if controls %}
+    <div class="box has-background-grey">
+        <div class="columns level section">
+            {% include "components/control_steps.html" %}
+            {% include "components/checks.html" %}
+        </div>
+    </div>
+{% endif %}
 
 {% endblock %}

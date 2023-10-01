@@ -1,0 +1,20 @@
+{% if checks %}
+    <div class="column">
+        <table class="table is-grey has-background-grey has-text-dark">
+                <thead>
+                <tr>
+                    <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
+                    <th class="has-text-dark"><ion-icon class="icon is-medium" name="eye-outline"></ion-icon></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for check in checks %}
+                    <tr class="read-row">
+                        <td>{{ check.timestamp }}</td>
+                        <td>{{ check.set_point }} °C</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+    </div>
+{% endif %}

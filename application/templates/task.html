@@ -20,13 +20,6 @@
                     {% include "components/measures.html" %}
                 </div>
 
-                {% if controls %}
-                    <div class="block tile is-3">
-                        {% include "components/control_steps.html" %}
-                    </div>
-                {% endif %}
-
-
             </div>
             {% include "components/buttons.html" %}
 
@@ -34,10 +27,14 @@
         </form>
     </div>
 
-    {% if reads %}
-    <div class="box has-background-grey">
-    {% include "components/reads.html" %}
-    </div>
+    {% if controls %}
+        <div class="box has-background-grey">
+            <div class="columns level section">
+            {% include "components/control_steps.html" %}
+            {% include "components/checks.html" %}
+            {% include "components/reads.html" %}
+            </div>
+        </div>
     {% endif %}
 
 </div>

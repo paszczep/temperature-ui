@@ -1,23 +1,25 @@
 {% if reads %}
+    <div class="column is-5">
+        <table class="table is-grey is-hoverable has-background-grey has-text-dark">
+            <thead>
+            <tr>
+                <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
+                <th class="has-text-dark"><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
+                <th class="has-text-dark"><ion-icon class="icon is-medium" name="time-outline"></ion-icon></th>
+                <th class="has-text-dark"><ion-icon class="icon is-medium" name="eyedrop-outline"></ion-icon></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for read in reads %}
+                <tr class="read-row">
+                    <td>{{ read.db_time }}</td>
+                    <td>{{ read.thermometer }}</td>
+                    <td>{{ read.read_time }}</td>
+                    <td>{{ read.temperature }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endif %}
 
-<div class="column hero has-background-grey">
-<table class="table is-grey is-hoverable has-background-grey has-text-dark">
-    <thead>
-    <tr>
-        <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
-        <th class="has-text-dark"><ion-icon class="icon is-medium" name="time-outline"></ion-icon></th>
-        <th class="has-text-dark"><ion-icon class="icon is-medium" name="eye-outline"></ion-icon></ion-icon></th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for read in reads %}
-        <tr class="read-row">
-            <td>{{ read.db_time }}</td>
-            <td>{{ read.read_time }}</td>
-            <td>{{ read.temperature }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-    </div>
