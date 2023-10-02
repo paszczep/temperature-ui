@@ -5,14 +5,14 @@
             </span>
     </a>
     {% if '/set/' in url_for(request.endpoint, container=task_container.name) %}
-     <a class="button is-primary is-outlined is-inverted is-large" href="{{ url_for('input.temp_set', container=task_container.name) }}">
+     <a class="button is-primary is-outlined is-inverted is-large" href="{{ url_for('input_set.temp_set', container=task_container.name) }}">
         <span class="icon is-large">
                 <ion-icon name="refresh-outline"></ion-icon>
             </span>
     </a>
     {% elif '/task/' in url_for(request.endpoint, container=task_container.name) %}
 
-     <a class="button is-primary is-outlined is-inverted is-large" href="{{ url_for('input.task', container=task_container.name) }}">
+     <a class="button is-primary is-outlined is-inverted is-large" href="{{ url_for('input_task.task', container=task_container.name) }}">
         <span class="icon is-large">
                 <ion-icon name="refresh-outline"></ion-icon>
             </span>
@@ -27,7 +27,7 @@
     {% elif task_container.task %}
         <a class="button is-large is-primary" disabled>
     {% else %}
-        <a class="button is-large is-primary" href="{{ url_for('input.temp_set', container=task_container.name) }}">
+        <a class="button is-large is-primary" href="{{ url_for('input_set.temp_set', container=task_container.name) }}">
     {% endif %}
             <span class="icon is-large">
                 <ion-icon name="alarm-outline"></ion-icon>
@@ -40,11 +40,9 @@
     {% elif task_container.set %}
             <a class="button is-large is-primary" disabled>
     {% else %}
-            <a class="button is-large is-primary" href="{{ url_for('input.task', container=task_container.name) }}">
+            <a class="button is-large is-primary" href="{{ url_for('input_task.task', container=task_container.name) }}">
     {% endif %}
                 <span class="icon is-large">
                 <ion-icon name="airplane-outline"></ion-icon>
                 </span>
         </a>
-
-</p>

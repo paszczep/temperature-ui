@@ -1,5 +1,5 @@
 {% if not container.task %}
-    <a class="button is-medium is-primary center" href="{{ url_for('input.temp_set', container=container.name) }}">
+    <a class="button is-medium is-primary center" href="{{ url_for('input_set.temp_set', container=container.name) }}">
         {% if container.set %}
 <!--            {{ container.set[0].status }}-->
             {% set task_status = container.set[0].status %}

@@ -1,4 +1,4 @@
-from .database import select_from_db, update_status_in_db, ExecuteTask, ExecuteSet, task_from_dict
+from .database import select_from_db, update_status_in_db, ExecuteTask, ExecuteSet, task_from_dict, ExecuteSetControl
 from threading import Thread
 import sched
 from time import time, sleep
@@ -19,7 +19,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local_api = True
+run_local_api = False
 
 if run_local_api:
     logging.info('local api')
@@ -99,27 +99,37 @@ def schedule_temperature_setting(set_to_go: ExecuteSet, retry: int = 4):
         scheduler.enterabs(set_to_go.timestamp, 0, execute_set_temperature, kwargs={'run_set': set_to_go})
         scheduler.run()
 
+    def error_set():
+        set_to_go.status = 'error'
+        update_status_in_db(set_to_go)
+        logging.info(f'failed {set_to_go.container.name} {set_to_go.temperature}')
+
+    def check_for_errors(the_now: int, setting_operation: ExecuteSet):
+        if retry == 2:
+            executed_control_ids = select_from_db(
+                ExecuteSetControl.__tablename__,
+                select_columns=['control_id'],
+                where_condition={'set_id': set_to_go.id}, keys=False)
+            if (the_now > setting_operation.timestamp + 10*60) and not executed_control_ids:
+                error_set()
+
     def schedule_and_retry_setting(setting_retry: int):
         schedule_setting()
         logging.info(f'scheduling setting {set_to_go.container.name} to {set_to_go.temperature}°C')
-        set_to_go.timestamp = int(time()) + 5*60
+        time_now = int(time())
+        set_to_go.timestamp = time_now + 5*60
         if setting_retry:
             logging.info('checking and possible setting')
             setting_retry -= 1
             schedule_temperature_setting(set_to_go, setting_retry)
         else:
-            set_to_go.status = 'error'
-            update_status_in_db(set_to_go)
-            logging.info(f'failed {set_to_go.container.name} {set_to_go.temperature}')
+            error_set()
 
     def get_updated_set_status() -> str:
-        return select_from_db(ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
+        return select_from_db(
+            ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
 
-    def end_set(ended_set: ExecuteSet):
-        ended_set.status = 'ended'
-        update_status_in_db(ended_set)
-
-    # sleep(30)
+    sleep(30)
     try:
         set_to_go.status = get_updated_set_status()
     except IndexError:
@@ -170,8 +180,6 @@ def schedule_temperature_task(schedule_task_id: str):
                 schedule_temperature_task(schedule_task_id)
             else:
                 end_task(task_at_hand)
-        # elif task_at_hand.status == 'cancelled':
-        #     end_task(task_at_hand)
 
 
 def thread_task(threaded_task_id: str):

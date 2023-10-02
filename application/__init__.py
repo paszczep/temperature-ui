@@ -54,8 +54,11 @@ def create_app():
     from .control import control as control_blueprint
     app.register_blueprint(control_blueprint)
 
-    from .user_input import user_input as input_blueprint
-    app.register_blueprint(input_blueprint)
+    from .input_task import input_task as task_blueprint
+    app.register_blueprint(task_blueprint)
+
+    from .input_set import input_set as set_blueprint
+    app.register_blueprint(set_blueprint)
 
     return app
 

@@ -35,6 +35,13 @@ class ExecuteTask:
     controls: list
 
 
+@dataclass(frozen=True)
+class ExecuteSetControl:
+    __tablename__ = "set_controls"
+    set_id: str
+    control_id: str
+
+
 def task_from_dict(t: dict) -> ExecuteTask:
     return ExecuteTask(
         id=t['id'],
