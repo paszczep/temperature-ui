@@ -42,7 +42,7 @@ navbar {background-color: black;}
 }
 
 tr {
-      	font-size: 1.0pc;
+    font-size: 1.0pc;
 }
 
 .setting{
@@ -59,35 +59,32 @@ tr {
 }
 
  .row-container-always {
-            display: flex;        /* Use Flexbox */
-            flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
-            overflow-x: auto;     /* Allow horizontal scrolling if needed */
-            white-space: nowrap;  /* Prevent content inside children from wrapping */
-        }
+    display: flex;        /* Use Flexbox */
+    flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
+    overflow-x: auto;     /* Allow horizontal scrolling if needed */
+    white-space: nowrap;  /* Prevent content inside children from wrapping */
+}
 
 /* tablets up */
-@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+@media (min-width:641px) { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
     /* background: red; */
 }
-@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */
-  tr {
-      	font-size: 1.3pc;
+@media (min-width:961px) { /* tablet, landscape iPad, lo-res laptops ands desktops */
+    tr {
+        font-size: 1.3pc;
     }
 
-  .row-container-desktop {
-            display: flex;        /* Use Flexbox */
-            flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
-            overflow-x: auto;     /* Allow horizontal scrolling if needed */
-            white-space: nowrap;  /* Prevent content inside children from wrapping */
-        }
-
+    .row-container-desktop {
+        display: flex;        /* Use Flexbox */
+        flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
+        overflow-x: auto;     /* Allow horizontal scrolling if needed */
+        white-space: nowrap;  /* Prevent content inside children from wrapping */
+    }
 }
 
 @media (min-width:1281px) { /* hi-res laptops and desktops */ }
 
-@media (max-width: 1250px) {
-
-}
+@media (max-width: 1250px) { }
 
 @media screen and (min-width: 300px) and (max-width: 736px) {
 

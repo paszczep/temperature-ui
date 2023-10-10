@@ -19,7 +19,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local_api = False
+run_local_api = True
 
 if run_local_api:
     logging.info('local api')
@@ -149,8 +149,7 @@ def schedule_temperature_task(schedule_task_id: str):
         logging.info('retrieving task at hand')
         select_tasks = select_from_db(
                 table_name=ExecuteTask.__tablename__,
-                where_condition={'id': schedule_task_id},
-                keys=True)
+                where_condition={'id': schedule_task_id}, keys=True)
         return [task_from_dict(tsk) for tsk in select_tasks].pop() if select_tasks else None
 
     def do_execute_task(exec_task_id: str):
@@ -176,7 +175,7 @@ def schedule_temperature_task(schedule_task_id: str):
         if task_at_hand.status == 'running':
             schedule_task(task_at_hand)
             if time() < task_at_hand.start + task_at_hand.duration:
-                sleep(10*60)
+                sleep(5*60)
                 schedule_temperature_task(schedule_task_id)
             else:
                 end_task(task_at_hand)
