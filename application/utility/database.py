@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 from psycopg2 import connect
 from dataclasses import dataclass
 
-parent_dir = Path(__file__).parent.parent
+parent_dir = Path(__file__).parent.parent.parent
 dotenv_dir = parent_dir / '.env'
 dotenv_values = dotenv_values(dotenv_dir)
 
@@ -39,6 +39,13 @@ class ExecuteTask:
 class ExecuteSetControl:
     __tablename__ = "set_controls"
     set_id: str
+    control_id: str
+
+
+@dataclass(frozen=True)
+class ExecuteTaskControl:
+    __tablename__ = "task_controls"
+    task_id: str
     control_id: str
 
 

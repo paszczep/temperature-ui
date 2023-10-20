@@ -1,10 +1,8 @@
     <section class="hero is-black">
-        <div class="hero-head">
+
             <nav class="navbar">
-                <div class="container">
-                    <div id="navbarMenuHeroA" class="navbar-menu">
-                        <div class="navbar-end">
-                            {% if not current_user.is_authenticated %}
+               <div class="navbar-start">
+                        {% if not current_user.is_authenticated %}
                             <a href="{{ url_for('auth.login') }}" class="navbar-item">
                                 <ion-icon class="icon is-medium" name="log-in-outline"></ion-icon>
                             </a>
@@ -24,9 +22,12 @@
                                 <ion-icon class="icon is-medium" name="exit-outline"></ion-icon>
                             </a>
                             {% endif %}
-                        </div>
-                    </div>
+                </div>
+
+                <div class="navbar-end">
+                            <a class="logo navbar-item" href="{{ url_for('main.index') }}">
+                                {% include "components/logo.html" %}
+                            </a>
                 </div>
             </nav>
-        </div>
     </section>

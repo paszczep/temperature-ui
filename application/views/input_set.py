@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-from .models import Container, Set, Check
-from .form import TaskForm, SetForm
-from .process import thread_set, ExecuteSet
-from . import db
+from application.utility.models import Container, Set, Check
+from application.utility.form import SetForm, timestamp_from_selection
+from application.utility.process_setting import thread_set, ExecuteSet
+from application import db
 from typing import Union
 from uuid import uuid4
 from humanize import naturaltime
@@ -13,11 +13,6 @@ from datetime import timedelta
 
 
 input_set = Blueprint('input_set', __name__)
-
-
-def timestamp_from_selection(form: Union[TaskForm, SetForm]) -> int:
-    form_date_time = f'{form.date.data} {form.time.data}'
-    return int(datetime.timestamp(datetime.strptime(form_date_time, '%Y-%m-%d %H:%M:%S')))
 
 
 @input_set.route("/set/<container>", methods=["POST", "GET"])

@@ -39,25 +39,25 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import AppUser
+    from application.utility.models import AppUser
 
     @login_manager.user_loader
     def load_user(user_id):
         return AppUser.query.get(int(user_id))
 
-    from .auth import auth as auth_blueprint
+    from application.views.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    from .main import main as main_blueprint
+    from application.views.main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .control import control as control_blueprint
+    from application.views.control import control as control_blueprint
     app.register_blueprint(control_blueprint)
 
-    from .input_task import input_task as task_blueprint
+    from application.views.input_task import input_task as task_blueprint
     app.register_blueprint(task_blueprint)
 
-    from .input_set import input_set as set_blueprint
+    from application.views.input_set import input_set as set_blueprint
     app.register_blueprint(set_blueprint)
 
     return app

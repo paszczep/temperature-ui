@@ -5,6 +5,8 @@ from wtforms.validators import Length, InputRequired
 from wtforms_alchemy import QuerySelectMultipleField
 from wtforms import widgets
 from markupsafe import Markup
+from typing import Union
+from datetime import datetime
 
 # def save_button() -> str:
 #     return render_template("""<ion-icon name="save"></ion-icon>""")
@@ -54,3 +56,8 @@ class SetForm(FlaskForm):
     submit = SubmitField('Go!')
     cancel = SubmitField('Cancel')
     save = SubmitField('Save')
+
+
+def timestamp_from_selection(form: Union[TaskForm, SetForm]) -> int:
+    form_date_time = f'{form.date.data} {form.time.data}'
+    return int(datetime.timestamp(datetime.strptime(form_date_time, '%Y-%m-%d %H:%M:%S')))

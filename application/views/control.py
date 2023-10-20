@@ -2,9 +2,9 @@ from flask import Blueprint, redirect, render_template
 from flask_login import login_required
 from time import time
 from humanize import naturaltime
-from .process import initialize_database, check_containers
-from .models import Check, Container, Set, Task, Read, Control, data_objects, relationship_objects
-from . import db
+from application.utility.launch import initialize_database, check_containers
+from application.utility.models import Check, Container, Set, data_objects, relationship_objects
+from application import db
 from datetime import timedelta
 
 control = Blueprint('control', __name__)
