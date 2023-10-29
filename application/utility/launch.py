@@ -15,7 +15,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local_api = True
+run_local_api = False
 
 if run_local_api:
     logging.info('local api')
@@ -62,37 +62,35 @@ def execute_local(
         "task": task,
         "set": setting
     })
-
     command = f"""
     curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{payload}'"""
     subprocess.call(command, shell=True, executable='/bin/bash')
 
 
-def initialize_database():
+def api_local_or_lambda(**kwargs):
     if run_local_api:
-        execute_local(initialize=True)
+        logging.info('launching local api')
+        execute_local(**kwargs)
     else:
-        run_lambda(initialize=True)
+        logging.info('launching remote api')
+        run_lambda(**kwargs)
+
+
+def initialize_database():
+    logging.info(f'launching api to initialize database')
+    api_local_or_lambda(initialize=True)
 
 
 def check_containers():
-    logging.info(f'checking containers')
-    if run_local_api:
-        execute_local(check=True)
-    else:
-        run_lambda(check=True)
+    logging.info(f'launching api for checking containers')
+    api_local_or_lambda(check=True)
 
 
 def do_execute_task(exec_task_id: str):
-    logging.info('executing task')
-    if run_local_api:
-        execute_local(task=exec_task_id)
-    else:
-        run_lambda(task=exec_task_id)
+    logging.info(f'launching api for task execution')
+    api_local_or_lambda(task=exec_task_id)
 
 
 def execute_setting(run_set_id: str):
-    if run_local_api:
-        execute_local(setting=run_set_id)
-    else:
-        run_lambda(setting=run_set_id)
+    logging.info(f'launching api for setting execution')
+    api_local_or_lambda(setting=run_set_id)

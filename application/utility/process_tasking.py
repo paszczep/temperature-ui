@@ -1,4 +1,6 @@
-from application.utility.database import (select_from_db, update_status_in_db, ExecuteTask, task_from_dict,)
+from application.utility.database_query import select_from_db, update_status_in_db
+from application.utility.models_process import (ExecuteTask, task_from_dict, ExecuteTaskControl, ExecuteCheck,
+                                                ExecuteTaskRead)
 from application.utility.launch import do_execute_task
 from threading import Thread
 import sched
@@ -6,18 +8,36 @@ from time import time, sleep
 from typing import Union
 import logging
 
+SETTING_INTERVAL = 60 * 10
 
-def check_for_errors():
-    if retry == 2:
+
+def error_task(bad_task: ExecuteTask):
+    logging.info('task error')
+    bad_task.status = 'error'
+    update_status_in_db(bad_task)
+
+
+def check_for_errors(task_at_hand: ExecuteTask, setting_count: int):
+    logging.info('checking for api execution failure')
+    if setting_count == 2:
         executed_control_ids = select_from_db(
-            ExecuteSetControl.__tablename__,
+            ExecuteTaskControl.__tablename__,
             select_columns=['control_id'],
-            where_condition={'set_id': set_to_go.id}, keys=False)
-        if not executed_control_ids:
-            error_setting()
+            where_condition={'task_id': task_at_hand.id}, keys=False)
+        logging.info(f'executed controls {len(executed_control_ids)}')
+        created_checks = select_from_db(
+            ExecuteCheck.__tablename__,
+            select_columns=['id'],
+            where_condition={'container': task_at_hand.container}, keys=False)
+        created_read_ids = select_from_db(
+            ExecuteTaskRead.__tablename__,
+            select_columns=['read_id'],
+            where_condition={'task_id': task_at_hand.id}, keys=False)
+        if not executed_control_ids and not created_checks and not created_read_ids:
+            error_task(task_at_hand)
 
 
-def schedule_temperature_task(schedule_task_id: str):
+def tasking_scheduling(schedule_task_id: str, setting_count: int = 0):
     def get_task_at_hand() -> Union[ExecuteTask, None]:
         logging.info('retrieving task at hand')
         select_tasks = select_from_db(
@@ -32,6 +52,7 @@ def schedule_temperature_task(schedule_task_id: str):
         scheduler.run()
 
     def end_task(ended_task: ExecuteTask):
+        logging.info('ending task')
         task_at_hand.status = 'ended'
         update_status_in_db(ended_task)
 
@@ -40,14 +61,17 @@ def schedule_temperature_task(schedule_task_id: str):
         logging.info(f'task status {task_at_hand.status}')
         if task_at_hand.status == 'running':
             schedule_task(task_at_hand)
-            if time() < task_at_hand.start + task_at_hand.duration:
-                sleep(5*60)
-                schedule_temperature_task(schedule_task_id)
+            if time() < task_at_hand.start + task_at_hand.duration + SETTING_INTERVAL*10:
+                sleep(SETTING_INTERVAL)
+                setting_count += 1
+                logging.info(f'setting count {setting_count}')
+                check_for_errors(task_at_hand, setting_count)
+                tasking_scheduling(schedule_task_id, setting_count)
             else:
-                end_task(task_at_hand)
+                error_task(task_at_hand)
 
 
 def thread_task(threaded_task_id: str):
-    logging.info(f'threading tasking')
-    thread = Thread(target=schedule_temperature_task, args=[threaded_task_id])
+    logging.info(f'threading tasking api launch')
+    thread = Thread(target=tasking_scheduling, args=[threaded_task_id])
     thread.start()

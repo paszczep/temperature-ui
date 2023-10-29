@@ -10,7 +10,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for read in reads %}
+            {% for read in reads[::-1] %}
                 <tr class="read-row">
                     <td>{{ read.db_time }}</td>
                     <td>{{ read.thermometer }}</td>

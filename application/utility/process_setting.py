@@ -1,4 +1,5 @@
-from application.utility.database import select_from_db, update_status_in_db, ExecuteSet, ExecuteSetControl
+from application.utility.database_query import select_from_db, update_status_in_db
+from application.utility.models_process import ExecuteSet, ExecuteSetControl
 from application.utility.launch import execute_setting
 from threading import Thread
 import sched
@@ -6,7 +7,8 @@ from time import time, sleep
 from typing import Union
 import logging
 
-RETRY = 4
+RETRY = 10
+SETTING_INTERVAL = 60*10
 
 
 def setting_schedule_process(set_to_go: ExecuteSet, retry: int = RETRY):
@@ -15,6 +17,7 @@ def setting_schedule_process(set_to_go: ExecuteSet, retry: int = RETRY):
         execute_setting(run_set.id)
 
     def schedule_setting_enter():
+        logging.info('setting schedule entry')
         scheduler = sched.scheduler(time, sleep)
         scheduler.enterabs(set_to_go.timestamp, 0, do_execute_setting, kwargs={'run_set': set_to_go})
         scheduler.run()
@@ -24,8 +27,9 @@ def setting_schedule_process(set_to_go: ExecuteSet, retry: int = RETRY):
         update_status_in_db(set_to_go)
         logging.info(f'failed {set_to_go.container.name} {set_to_go.temperature}')
 
-    def check_for_errors():
-        if retry == 2:
+    def check_for_errors(error_check_retry: int):
+        logging.info('checking for api execution failure')
+        if error_check_retry == RETRY - 2:
             executed_control_ids = select_from_db(
                 ExecuteSetControl.__tablename__,
                 select_columns=['control_id'],
@@ -37,23 +41,25 @@ def setting_schedule_process(set_to_go: ExecuteSet, retry: int = RETRY):
         schedule_setting_enter()
         logging.info(f'scheduling setting {set_to_go.container.name} to {set_to_go.temperature}°C')
         time_now = int(time())
-        set_to_go.timestamp = time_now + 7.5*60
+        set_to_go.timestamp = time_now + SETTING_INTERVAL
         if setting_retry:
-            logging.info('checking and possible setting')
+            logging.info(f'scheduling api launch {setting_retry - RETRY} ')
             setting_retry -= 1
+            check_for_errors(setting_retry)
             setting_schedule_process(set_to_go, setting_retry)
-            check_for_errors()
         else:
             error_setting()
 
     def get_updated_set_status() -> str:
         return select_from_db(
             ExecuteSet.__tablename__, ['status'], {'id': set_to_go.id}, keys=False).pop()
+
     if retry == RETRY:
         sleep(30)
     try:
         set_to_go.status = get_updated_set_status()
     except IndexError:
+        logging.info(f'setting task already deleted')
         exit()
     if set_to_go:
         logging.info(f'setting status {set_to_go.status}')

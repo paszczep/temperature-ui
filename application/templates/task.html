@@ -27,7 +27,7 @@
         </form>
     </div>
 
-    {% if controls %}
+    {% if controls or checks or reads %}
         <div class="box has-background-grey-lighter">
             <div class="columns section">
             {% include "components/control_steps.html" %}

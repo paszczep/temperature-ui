@@ -89,9 +89,6 @@ class Set(db.Model):
     controls = db.relationship("Control", secondary="set_controls", back_populates="set")
 
 
-data_objects = (Control, Check, Task, Read, Set)
-
-
 container_set = db.Table(
     "container_set",
     db.Column("container_id", db.ForeignKey("container.name"), primary_key=True),
@@ -129,3 +126,7 @@ task_reads = db.Table(
 )
 
 relationship_objects = [container_set, container_task, task_controls, set_controls, task_reads]
+
+data_objects = (Control, Check, Task, Read, Set)
+
+object_objects = (container_thermometers, Thermometer, Container)

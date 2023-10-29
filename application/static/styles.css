@@ -58,7 +58,7 @@ tr {
     width: 15px;
 }
 
- .row-container-always {
+.row-container-always {
     display: flex;        /* Use Flexbox */
     flex-wrap: nowrap;    /* Prevent wrapping on multiple lines */
     overflow-x: auto;     /* Allow horizontal scrolling if needed */

@@ -8,32 +8,30 @@
     &nbsp;
     {% if checks %}
 
-        <form action="{{ url_for('control.delete_data') }}" method="post">
-            <button class=" button is-danger is-outlined" type="submit">
-                <ion-icon class="icon is-large" name="trash"></ion-icon>
-            </button>
-        </form>
+    <form action="{{ url_for('control.delete_data') }}" method="post">
+        <button class=" button is-danger is-outlined" type="submit">
+            <ion-icon class="icon is-large" name="trash"></ion-icon>
+        </button>
+    </form>
+    &nbsp;
+
+    <button class="button is-warning is-outlined" disabled type="submit">
+        <ion-icon class="icon is-large" name="play-circle"></ion-icon>
+    </button>
 
     {% else %}
     <form>
-            <button class="button is-danger is-outlined is-static" type="submit">
-                <ion-icon class="icon is-large" name="trash"></ion-icon>
-            </button>
+        <button class="button is-danger is-outlined is-static" type="submit">
+            <ion-icon class="icon is-large" name="trash"></ion-icon>
+        </button>
     </form>
-    {% endif %}
     &nbsp;
-    {% if not containers %}
-
-        <form action="{{ url_for('control.init_db') }}" method="post">
-            <button class="button is-danger is-outlined" type="submit">
-                <ion-icon class="icon is-large" name="play-circle"></ion-icon>
-            </button>
-        </form>
-
-    {% else %}
-        <button class="button is-warning is-outlined" disabled type="submit">
+    <form action="{{ url_for('control.init_db') }}" method="post">
+        <button class="button is-warning is-outlined" type="submit">
             <ion-icon class="icon is-large" name="play-circle"></ion-icon>
         </button>
+    </form>
+
 
     {% endif %}
 </div>

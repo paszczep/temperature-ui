@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-from application.utility.models import Container, Thermometer, Task, Check
+from application.utility.models_application import Container, Thermometer, Task, Check
 from application.utility.form import TaskForm, timestamp_from_selection
 from application.utility.process_tasking import thread_task
 from application import db
@@ -56,10 +56,10 @@ def task(container: str):
             "time": start.time() if old_task else now.time(),
             "hours": (hours := old_task.duration // 3600 if old_task else 1),
             "minutes": (old_task.duration - hours*3600) / 60 if old_task else 15,
-            "t_start": old_task.t_start if old_task else 40,
-            "t_max": old_task.t_max if old_task else 40,
-            "t_min": old_task.t_min if old_task else 30,
-            "t_freeze": old_task.t_freeze if old_task else -20
+            "t_start": old_task.t_start if old_task else 30,
+            "t_max": old_task.t_max if old_task else 43,
+            "t_min": old_task.t_min if old_task else 35,
+            "t_freeze": old_task.t_freeze if old_task else 0
         }
 
     def render_task_form(
