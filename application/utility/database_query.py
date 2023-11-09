@@ -3,6 +3,17 @@ import logging
 from typing import Union
 
 
+def exception_handler_decorator(func):
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            return result
+        except Exception as e:
+            print(f"An exception occurred: {e}")
+            # You can handle the exception here or raise a custom exception if needed.
+    return wrapper
+
+
 def select_from_db(
         table_name: str,
         select_columns: Union[list, None] = None,

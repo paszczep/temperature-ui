@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class ExecuteTaskRead:
-    __tablename__ = "task_reads",
+    __tablename__ = "task_reads"
     task_id: str
     read_id: str
 

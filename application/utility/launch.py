@@ -6,6 +6,7 @@ from pathlib import Path
 from dotenv import dotenv_values
 import logging
 import subprocess
+from os import getenv
 
 parent_dir = Path(__file__).parent.parent.parent
 dotenv_dir = parent_dir / '.env'
@@ -15,7 +16,7 @@ key_1 = dotenv_values.get("API_KEY_1")
 key_2 = dotenv_values.get("API_KEY_2")
 aws_key_id = dotenv_values.get("AWS_KEY_ID")
 aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
-run_local_api = False
+run_local_api = True
 
 if run_local_api:
     logging.info('local api')
@@ -91,6 +92,6 @@ def do_execute_task(exec_task_id: str):
     api_local_or_lambda(task=exec_task_id)
 
 
-def execute_setting(run_set_id: str):
+def api_execute_setting(run_set_id: str):
     logging.info(f'launching api for setting execution')
     api_local_or_lambda(setting=run_set_id)

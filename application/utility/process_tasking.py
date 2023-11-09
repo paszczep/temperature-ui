@@ -8,7 +8,7 @@ from time import time, sleep
 from typing import Union
 import logging
 
-SETTING_INTERVAL = 60 * 10
+SETTING_INTERVAL = 60 * 15
 
 
 def error_task(bad_task: ExecuteTask):
