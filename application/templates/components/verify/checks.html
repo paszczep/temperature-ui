@@ -3,15 +3,20 @@
         <table class="table is-grey has-background-grey-lighter has-text-dark">
                 <thead>
                 <tr>
-                    <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
                     <th class="has-text-dark"><ion-icon class="icon is-medium" name="eye-outline"></ion-icon></th>
+<!--                    <th></th>-->
+                    <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for check in checks %}
                     <tr class="read-row">
-                        <td>{{ check.timestamp }}</td>
+                    {% if check.set_point %}
                         <td>{{ check.set_point }}°C</td>
+                    {% else %}
+                        <td><ion-icon class="icon" name="eye-off-outline"></ion-icon></td>
+                    {% endif %}
+                        <td>{{ check.timestamp }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -2,7 +2,8 @@ from flask import Blueprint, redirect, render_template
 from flask_login import login_required
 from time import time
 from humanize import naturaltime
-from application.utility.launch import initialize_database, check_containers
+from application.utility.mail import send_mail
+from application.utility.launch import initialize_database, check_containers, perform_api_test
 from application.utility.models_application import (Check, Container, Set, data_objects, relationship_objects,
                                                     object_objects)
 from application import db
@@ -36,16 +37,16 @@ def tasks():
 @control.route("/control/initialize", methods=["POST"])
 @login_required
 def init_db():
-    for relationship in relationship_objects:
-        db.session.query(relationship).delete()
-
-    for objects in data_objects:
-        db.session.query(objects).delete()
-
-    for things in object_objects:
-        db.session.query(things).delete()
-
-    db.session.commit()
+    # for relationship in relationship_objects:
+    #     db.session.query(relationship).delete()
+    #
+    # for objects in data_objects:
+    #     db.session.query(objects).delete()
+    #
+    # for things in object_objects:
+    #     db.session.query(things).delete()
+    #
+    # db.session.commit()
     initialize_database()
     return redirect('/control')
 
@@ -72,3 +73,10 @@ def check():
     check_containers()
     return redirect('/control')
 
+
+@control.route("/control/test", methods=["POST"])
+@login_required
+def test():
+    perform_api_test()
+    # send_mail(message='test')
+    return redirect('/control')

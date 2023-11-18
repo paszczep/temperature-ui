@@ -1,19 +1,9 @@
-from application.utility.database_connect import db_connection_and_cursor
+from application.utility.database_connect import db_connection_and_cursor, database_exception
 import logging
 from typing import Union
 
 
-def exception_handler_decorator(func):
-    def wrapper(*args, **kwargs):
-        try:
-            result = func(*args, **kwargs)
-            return result
-        except Exception as e:
-            print(f"An exception occurred: {e}")
-            # You can handle the exception here or raise a custom exception if needed.
-    return wrapper
-
-
+@database_exception
 def select_from_db(
         table_name: str,
         select_columns: Union[list, None] = None,
@@ -51,6 +41,7 @@ def select_from_db(
     return return_values
 
 
+@database_exception
 def update_status_in_db(update_object: object):
     insert_connection, insert_cursor = db_connection_and_cursor()
     update_query = f"""

@@ -1,23 +1,28 @@
+{% set button_color = "is-link  is-outlined is-medium" %}
+
 
 <div class="buttons center">
-{% for cont in all_containers %}
+    {% for cont in all_containers %}
 
     {% if not cont.set and (cont.task or '/task/' in url_for(request.endpoint, container=task_container.name)) %}
 
-        {% if cont == task_container: %}
-            <a class="button is-info is-outlined is-focused has-text-light" href="{{ url_for('input_task.task', container=cont.name) }}">{{ cont.label }}</a>
-        {% else %}
-            <a class="button is-info is-outlined" href="{{ url_for('input_task.task', container=cont.name) }}">{{ cont.label }}</a>
-        {% endif %}
+    {% if cont == task_container: %}
+        <a class="button {{button_color}} is-focused has-text-light"
+           href="{{ url_for('input_task.task', container=cont.name) }}">{{ cont.label }}</a>
+    {% else %}
+        <a class="button {{button_color}}" href="{{ url_for('input_task.task', container=cont.name) }}">{{ cont.label }}</a>
+    {% endif %}
 
     {% else %}
 
-        {% if cont == task_container: %}
-            <a class="button is-info is-outlined is-focused has-text-light" href="{{ url_for('input_set.temp_set', container=cont.name) }}">{{ cont.label }}</a>
-        {% else %}
-            <a class="button is-info is-outlined" href="{{ url_for('input_set.temp_set', container=cont.name) }}">{{ cont.label }}</a>
-        {% endif %}
+    {% if cont == task_container: %}
+        <a class="button {{button_color}} is-focused has-text-light"
+           href="{{ url_for('input_set.temp_set', container=cont.name) }}">{{ cont.label }}</a>
+    {% else %}
+        <a class="button {{button_color}}" href="{{ url_for('input_set.temp_set', container=cont.name) }}">{{ cont.label
+            }}</a>
+    {% endif %}
 
     {% endif %}
-{% endfor %}
+    {% endfor %}
 </div>

@@ -3,19 +3,20 @@
         <table class="table is-grey is-hoverable has-background-grey-lighter has-text-dark">
             <thead>
             <tr>
-                <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
+                <th class="has-text-dark"><ion-icon class="icon is-medium" name="eyedrop-outline"></ion-icon></th>
                 <th class="has-text-dark"><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
                 <th class="has-text-dark"><ion-icon class="icon is-medium" name="time-outline"></ion-icon></th>
-                <th class="has-text-dark"><ion-icon class="icon is-medium" name="eyedrop-outline"></ion-icon></th>
+<!--                <th></th>-->
+                <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
             </tr>
             </thead>
             <tbody>
             {% for read in reads[::-1] %}
                 <tr class="read-row">
-                    <td>{{ read.db_time }}</td>
+                    <td>{{ read.temperature }}</td>
                     <td>{{ read.thermometer }}</td>
                     <td>{{ read.read_time }}</td>
-                    <td>{{ read.temperature }}</td>
+                    <td>{{ read.db_time }}</td>
                 </tr>
             {% endfor %}
             </tbody>

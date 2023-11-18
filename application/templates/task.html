@@ -10,18 +10,18 @@
         <form method="POST">
             <div class="columns is-centered level">
                 <div class="column is-5 tile is-ancestor is-vertical is-dark">
-                    {% include "components/name.html" %}
-                    {% include "components/beginning.html" %}
-                    {% include "components/duration.html" %}
-                    {% include "components/temp_band.html" %}
+                    {% include "components/input/name.html" %}
+                    {% include "components/input/beginning.html" %}
+                    {% include "components/input/duration.html" %}
+                    {% include "components/input/temp_band.html" %}
                 </div>
 
                 <div class="column is-4">
-                    {% include "components/measures.html" %}
+                    {% include "components/input/measures.html" %}
                 </div>
 
             </div>
-            {% include "components/buttons.html" %}
+            {% include "components/input/buttons.html" %}
 
             {{ form.csrf_token }}
         </form>
@@ -30,9 +30,9 @@
     {% if controls or checks or reads %}
         <div class="box has-background-grey-lighter">
             <div class="columns section">
-            {% include "components/control_steps.html" %}
-            {% include "components/checks.html" %}
-            {% include "components/reads.html" %}
+            {% include "components/verify/control_steps.html" %}
+            {% include "components/verify/checks.html" %}
+            {% include "components/verify/reads.html" %}
             </div>
         </div>
     {% endif %}

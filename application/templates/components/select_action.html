@@ -1,49 +1,6 @@
 <p class="buttons center">
-    <a class="button is-info is-outlined is-large" href="{{ url_for('control.tasks', container=task_container.name) }}">
-        <span class="icon is-large">
-                <ion-icon name="arrow-back"></ion-icon>
-            </span>
-    </a>
-    {% if '/set/' in url_for(request.endpoint, container=task_container.name) %}
-     <a class="button is-primary is-outlined is-large" href="{{ url_for('input_set.temp_set', container=task_container.name) }}">
-        <span class="icon is-large">
-                <ion-icon name="refresh-outline"></ion-icon>
-            </span>
-    </a>
-    {% elif '/task/' in url_for(request.endpoint, container=task_container.name) %}
-
-     <a class="button is-primary is-outlined is-large" href="{{ url_for('input_task.task', container=task_container.name) }}">
-        <span class="icon is-large">
-                <ion-icon name="refresh-outline"></ion-icon>
-            </span>
-    </a>
-    {% endif %}
-
-
-
-    {% if '/set/' in url_for(request.endpoint, container=task_container.name)%}
-        <a class="button is-large is-primary is-static is-focused has-text-primary">
-
-    {% elif task_container.task %}
-        <a class="button is-large is-primary" disabled>
-    {% else %}
-        <a class="button is-large is-primary" href="{{ url_for('input_set.temp_set', container=task_container.name) }}">
-    {% endif %}
-            <span class="icon is-large">
-                <ion-icon name="alarm-outline"></ion-icon>
-            </span>
-        </a>
-
-    {% if '/task/' in url_for(request.endpoint, container=task_container.name)%}
-            <a class="button is-large is-primary is-static is-focused has-text-primary">
-
-    {% elif task_container.set %}
-            <a class="button is-large is-primary" disabled>
-    {% else %}
-            <a class="button is-large is-primary" href="{{ url_for('input_task.task', container=task_container.name) }}">
-    {% endif %}
-                <span class="icon is-large">
-                <ion-icon name="airplane-outline"></ion-icon>
-                </span>
-        </a>
+    {% include "components/select/back.html" %}
+    {% include "components/select/refresh.html" %}
+    {% include "components/select/status.html" %}
+    {% include "components/select/action.html" %}
 </p>

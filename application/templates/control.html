@@ -9,28 +9,28 @@
         <th><ion-icon class="icon is-medium" name="pricetag-outline"></ion-icon></th>
         <th ><ion-icon class="icon is-medium" name="power"></ion-icon></th>
         <th><ion-icon class="icon is-medium" name="thermometer-outline"></ion-icon></th>
-        <th><ion-icon class="icon is-medium" name="airplane-outline"></ion-icon></th>
+        <th><ion-icon class="icon is-medium" name="airplane"></ion-icon></th>
         <th><ion-icon class="icon is-medium" name="alarm-outline"></ion-icon></th>
     </tr>
     </thead>
     <tbody>
-    {% for container in containers %}
+    {% for task_container in containers %}
 
     <tr class="has-text-dark">
-        <td>{{ container.name[-2:] }}</td>
-        <td>{{ container.label }}</td>
+        <td>{{ task_container.name[-2:] }}</td>
+        <td>{{ task_container.label }}</td>
         {% if checks %}
-            <td>{{ checks[container.name].power }}</td>
-            <td>{{ checks[container.name].read_setpoint }}</td>
+            <td>{{ checks[task_container.name].power }}</td>
+            <td>{{ checks[task_container.name].read_setpoint }}</td>
         {% else %}
             <td> - </td>
             <td> - </td>
         {% endif %}
         <td>
-            {% include "components/add_task_button.html" %}
+            {% include "components/add/add_task_button.html" %}
         </td>
         <td>
-            {% include "components/add_set_button.html" %}
+            {% include "components/add/add_set_button.html" %}
         </td>
     </tr>
     {% endfor %}

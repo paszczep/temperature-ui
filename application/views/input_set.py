@@ -63,7 +63,7 @@ def temp_set(container):
             rendered_set_form: SetForm,
             form_container: Container,
             rendered_all_containers: list[Container],
-            render_checks
+            render_checks: list[Check]
     ):
         now_time = time()
         return render_template(
@@ -80,7 +80,7 @@ def temp_set(container):
             checks=[{
                 'set_point': c.read_setpoint,
                 'timestamp': naturaltime(timedelta(seconds=(now_time - c.timestamp)))
-            } for c in render_checks] if render_checks else None
+            } for c in render_checks if c.timestamp > (now_time - 24*60*60)] if render_checks else None
         )
 
     def retrieve_relevant_checks(check_container: Container, check_set: Union[Set, None]) -> Union[list[Check], None]:

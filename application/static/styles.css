@@ -15,8 +15,18 @@
 }
 
 
+.left-pad-30 {
+  padding-left: 15px;
+}
+
+
 .left-pad {
   padding-left: 15px;
+}
+
+
+.left-pad-5 {
+  padding-left: 5px;
 }
 
 .large-pad {

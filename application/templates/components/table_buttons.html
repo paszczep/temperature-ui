@@ -1,37 +1,53 @@
 <div class="row-container-always buttons block">
 
-    <form action="{{ url_for('control.check') }}" method="post">
+    <form class="left-pad-5" action="{{ url_for('control.check') }}" method="post">
         <button class="button is-link is-outlined" type="submit">
             <ion-icon class="icon is-large" name="refresh"></ion-icon>
         </button>
     </form>
-    &nbsp;
-    {% if checks %}
 
-    <form action="{{ url_for('control.delete_data') }}" method="post">
-        <button class=" button is-danger is-outlined" type="submit">
-            <ion-icon class="icon is-large" name="trash"></ion-icon>
-        </button>
-    </form>
-    &nbsp;
+    {% if current_user.admin %}
 
-    <button class="button is-warning is-outlined" disabled type="submit">
-        <ion-icon class="icon is-large" name="play-circle"></ion-icon>
-    </button>
-
+        <form class="left-pad-5" action="{{ url_for('control.test') }}" method="post">
+            <button class="button is-info is-outlined" type="submit">
+                <ion-icon class="icon is-large" name="flask"></ion-icon>
+            </button>
+        </form>
     {% else %}
-    <form>
-        <button class="button is-danger is-outlined is-static" type="submit">
-            <ion-icon class="icon is-large" name="trash"></ion-icon>
-        </button>
-    </form>
-    &nbsp;
-    <form action="{{ url_for('control.init_db') }}" method="post">
-        <button class="button is-warning is-outlined" type="submit">
-            <ion-icon class="icon is-large" name="play-circle"></ion-icon>
-        </button>
-    </form>
+        <form class="left-pad-5">
+            <button class="button is-info is-outlined is-static" type="submit">
+                <ion-icon class="icon is-large" name="flask"></ion-icon>
+            </button>
+        </form>
 
+    {% endif %}
+
+    {% if checks %}
+        <form class="left-pad-5" action="{{ url_for('control.delete_data') }}" method="post">
+            <button class="button is-danger is-outlined" type="submit">
+                <ion-icon class="icon is-large" name="trash"></ion-icon>
+            </button>
+        </form>
+    {% else %}
+        <form class="left-pad-5">
+            <button class="button is-danger is-outlined is-static" type="submit">
+                <ion-icon class="icon is-large" name="trash"></ion-icon>
+            </button>
+        </form>
+    {% endif %}
+
+    {% if not checks or current_user.admin %}
+        <form class="left-pad-5" action="{{ url_for('control.init_db') }}" method="post">
+            <button class="button is-warning is-outlined" type="submit">
+                <ion-icon class="icon is-large" name="leaf"></ion-icon>
+            </button>
+        </form>
+    {% else %}
+        <form class="left-pad-5">
+            <button class="button is-warning is-outlined" disabled type="submit">
+                <ion-icon class="icon is-large" name="play-circle"></ion-icon>
+            </button>
+        </form>
 
     {% endif %}
 </div>

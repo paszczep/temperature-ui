@@ -9,15 +9,15 @@
         <form method="POST">
             <div class="columns is-multiline is-centered">
                 <div class="column is-6 tile is-vertical">
-                    {% include "components/name.html" %}
-                    {% include "components/temp_set.html" %}
-                    {% include "components/beginning.html" %}
+                    {% include "components/input/name.html" %}
+                    {% include "components/input/temp_set.html" %}
+                    {% include "components/input/beginning.html" %}
 
                 </div>
 
             </div>
             <div class="columns is-centered">
-                <div class="column">{% include "components/buttons.html" %}</div>
+                <div class="column">{% include "components/input/buttons.html" %}</div>
             </div>
 
             {{ form.csrf_token }}
@@ -30,8 +30,8 @@
 {% if controls %}
     <div class="box has-background-grey-lighter">
         <div class="columns level section">
-            {% include "components/control_steps.html" %}
-            {% include "components/checks.html" %}
+            {% include "components/verify/control_steps.html" %}
+            {% include "components/verify/checks.html" %}
         </div>
     </div>
 {% endif %}

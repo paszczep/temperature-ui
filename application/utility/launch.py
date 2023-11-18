@@ -10,12 +10,12 @@ from os import getenv
 
 parent_dir = Path(__file__).parent.parent.parent
 dotenv_dir = parent_dir / '.env'
-dotenv_values = dotenv_values(dotenv_dir)
+env_values = dotenv_values(dotenv_dir)
 
-key_1 = dotenv_values.get("API_KEY_1")
-key_2 = dotenv_values.get("API_KEY_2")
-aws_key_id = dotenv_values.get("AWS_KEY_ID")
-aws_secret_key = dotenv_values.get("AWS_SECRET_KEY")
+key_1 = env_values.get("API_KEY_1")
+key_2 = env_values.get("API_KEY_2")
+aws_key_id = env_values.get("AWS_KEY_ID")
+aws_secret_key = env_values.get("AWS_SECRET_KEY")
 run_local_api = True
 
 if run_local_api:
@@ -28,21 +28,27 @@ def key_hash(key: str) -> str:
     return sha256(key.encode("utf-8")).hexdigest()
 
 
-def run_lambda(
+def get_payload(
+        test: bool = False,
         initialize: bool = False,
         check: bool = False,
         task: Union[str, None] = None,
         setting: Union[str, None] = None
-):
-    client = boto3.client('lambda', 'eu-central-1', aws_access_key_id=aws_key_id, aws_secret_access_key=aws_secret_key)
-    payload = json.dumps({
+) -> str:
+    return json.dumps({
         "key_1": key_1,
         "key_2": key_hash(key_2),
+        "test": test,
         "initialize": initialize,
         "check": check,
         "task": task,
         "set": setting
     })
+
+
+def run_lambda(**kwargs):
+    client = boto3.client('lambda', 'eu-central-1', aws_access_key_id=aws_key_id, aws_secret_access_key=aws_secret_key)
+    payload = get_payload(**kwargs)
     response = client.invoke(
         FunctionName="temp_ctrl_lambda",
         Payload=payload
@@ -50,19 +56,8 @@ def run_lambda(
     return response['Payload'].read().decode("utf-8")
 
 
-def execute_local(
-        initialize: bool = False,
-        check: bool = False,
-        task: Union[str, None] = None,
-        setting: Union[str, None] = None):
-    payload = json.dumps({
-        "key_1": key_1,
-        "key_2": key_hash(key_2),
-        "initialize": initialize,
-        "check": check,
-        "task": task,
-        "set": setting
-    })
+def execute_local(**kwargs):
+    payload = get_payload(**kwargs)
     command = f"""
     curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{payload}'"""
     subprocess.call(command, shell=True, executable='/bin/bash')
@@ -75,6 +70,11 @@ def api_local_or_lambda(**kwargs):
     else:
         logging.info('launching remote api')
         run_lambda(**kwargs)
+
+
+def perform_api_test():
+    logging.info(f'launching api to initialize database')
+    api_local_or_lambda(test=True)
 
 
 def initialize_database():

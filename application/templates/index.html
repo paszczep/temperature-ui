@@ -1,16 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="columns center">
-    <div class="column is-3 center">
-        <div class="buttons box center">
+
+<div class="columns box tile is-vertical center">
+        <div class="column center tile is-child">
             <a class="button is-large is-success" href="{{ url_for('control.tasks') }}">
-                    {% include "components/logo.html" %}
+                {% include "components/logo.html" %}
             </a>
-          </div>
+        </div>
+        {% if current_user.is_authenticated %}
 
-    </div>
-
+        <div class="hero column is-three-quarters">
+            {% include "components/guide.html" %}
+        </div>
+        {% endif %}
+</div>
+<div>
+    <ion-icon class="icon" name="logo-tux"></ion-icon>
+    <ion-icon class="icon" name="logo-python"></ion-icon>
+    <ion-icon class="icon" name="logo-amazon"></ion-icon>
+    <ion-icon class="icon" name="logo-docker"></ion-icon>
+    <ion-icon class="icon" name="logo-chrome"></ion-icon>
 </div>
 
 

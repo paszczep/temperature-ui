@@ -1,0 +1,28 @@
+{% if '/set/' in url_for(request.endpoint, container=task_container.name)%}
+    <a class="button is-large is-primary is-static is-focused has-text-primary">
+        <ion-icon class="icon is-large" name="alarm"></ion-icon>
+    </a>
+{% elif task_container.task %}
+    <a class="button is-large is-primary" disabled>
+        <ion-icon class="icon is-large" name="alarm"></ion-icon>
+    </a>
+{% else %}
+    <a class="button is-large is-primary" href="{{ url_for('input_set.temp_set', container=task_container.name) }}">
+        <ion-icon class="icon is-large" name="alarm"></ion-icon>
+    </a>
+{% endif %}
+
+{% if '/task/' in url_for(request.endpoint, container=task_container.name)%}
+    <a class="button is-large is-primary is-static is-focused has-text-primary">
+        <ion-icon class="icon is-large" name="airplane"></ion-icon>
+    </a>
+{% elif task_container.set %}
+    <a class="button is-large is-primary" disabled>
+        <ion-icon class="icon is-large" name="airplane"></ion-icon>
+    </a>
+{% else %}
+    <a class="button is-large is-primary"
+       href="{{ url_for('input_task.task', container=task_container.name) }}">
+        <ion-icon class="icon is-large" name="airplane"></ion-icon>
+    </a>
+{% endif %}

@@ -1,0 +1,39 @@
+<!--{% if controls %}-->
+
+<!--<div class="column is-offset-1 is-3">-->
+<!--<div class="row-container tile is-parent">-->
+<!--    <ion-icon class="tile is-2 icon is-medium" name="footsteps-sharp"></ion-icon>-->
+<!--    <div class="tile is-parent is-vertical">-->
+<!--    {% for ctrl in controls[::-1] %}-->
+<!--        <div class="tile row-container">-->
+<!--            <div>{{ ctrl['temperature'] }}°C</div>-->
+<!--            <div class="left-pad">{{ ctrl['timestamp'] }}</div>-->
+<!--        </div>-->
+<!--    {% endfor %}-->
+<!--    </div>-->
+<!--</div></div>-->
+
+<!--{% endif %}-->
+
+
+{% if controls %}
+    <div class="column is-offset-1">
+        <table class="table is-grey has-background-grey-lighter has-text-dark">
+                <thead>
+                <tr>
+                    <th class="has-text-dark"><ion-icon class="icon is-medium" name="footsteps-sharp"></ion-icon></th>
+<!--                    <th></th>-->
+                    <th class="has-text-dark"><ion-icon class="icon is-medium" name="hourglass-outline"></ion-icon></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ctrl in controls[::-1] %}
+                    <tr class="read-row">
+                        <td>{{ ctrl['temperature'] }}°C</td>
+                        <td>{{ ctrl['timestamp'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+    </div>
+{% endif %}

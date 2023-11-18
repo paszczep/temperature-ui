@@ -1,0 +1,41 @@
+
+{% if task_container.set %}
+    {% set task_status = task_container.set[0].status %}
+{% elif task_container.task %}
+    {% set task_status = task_container.task[0].status %}
+{% endif %}
+
+{% if not task_status %}
+    {% set status_color = "is-link" %}
+
+{% elif task_status == 'new' %}
+    {% set status_color = "is-primary" %}
+{% elif task_status == 'running' %}
+    {% set status_color = "is-info" %}
+
+{% elif task_status == 'cancelled' %}
+    {% set status_color = "is-warning" %}
+
+{% elif task_status == 'ended' %}
+    {% set status_color = "is-success" %}
+
+{% elif task_status == 'error' %}
+    {% set status_color = "is-danger" %}
+{% endif %}
+
+
+{% if not task_container.set %}
+    <a class="button is-medium {{status_color}}" href="{{ url_for('input_task.task', container=task_container.name) }}">
+        {% if task_container.task %}
+                {% set task_status = task_container.task[0].status %}
+                {% include "components/status/icon.html" %}
+        {% else %}
+            <ion-icon class="icon is-large" name="add"></ion-icon>
+        {% endif %}
+    </a>
+
+{% else %}
+
+<a class="button is-medium" disabled><ion-icon class="icon is-medium" name="add"></ion-icon></a>
+
+{% endif %}
