@@ -16,7 +16,7 @@ key_1 = env_values.get("API_KEY_1")
 key_2 = env_values.get("API_KEY_2")
 aws_key_id = env_values.get("AWS_KEY_ID")
 aws_secret_key = env_values.get("AWS_SECRET_KEY")
-run_local_api = True
+run_local_api = False
 
 if run_local_api:
     logging.info('local api')
@@ -28,7 +28,7 @@ def key_hash(key: str) -> str:
     return sha256(key.encode("utf-8")).hexdigest()
 
 
-def get_payload(
+def _get_payload(
         test: bool = False,
         initialize: bool = False,
         check: bool = False,
@@ -48,7 +48,7 @@ def get_payload(
 
 def run_lambda(**kwargs):
     client = boto3.client('lambda', 'eu-central-1', aws_access_key_id=aws_key_id, aws_secret_access_key=aws_secret_key)
-    payload = get_payload(**kwargs)
+    payload = _get_payload(**kwargs)
     response = client.invoke(
         FunctionName="temp_ctrl_lambda",
         Payload=payload
@@ -57,7 +57,7 @@ def run_lambda(**kwargs):
 
 
 def execute_local(**kwargs):
-    payload = get_payload(**kwargs)
+    payload = _get_payload(**kwargs)
     command = f"""
     curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{payload}'"""
     subprocess.call(command, shell=True, executable='/bin/bash')

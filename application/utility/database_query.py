@@ -6,7 +6,7 @@ from typing import Union
 @database_exception
 def select_from_db(
         table_name: str,
-        select_columns: Union[list, None] = None,
+        columns: Union[list, None] = None,
         where_condition: Union[dict, None] = None,
         keys: bool = True
 ) -> Union[list[str], list[dict]]:
@@ -26,7 +26,7 @@ def select_from_db(
         else:
             return ''
 
-    select_query = f"""SELECT {col_str(select_columns)} FROM {table_name}{where_clause(where_condition)}"""
+    select_query = f"""SELECT {col_str(columns)} FROM {table_name}{where_clause(where_condition)}"""
     select_connection, select_cursor = db_connection_and_cursor()
 
     with select_connection:

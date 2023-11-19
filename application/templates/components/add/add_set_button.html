@@ -33,7 +33,7 @@
     <a class="button is-medium {{status_color}} center" href="{{ url_for('input_set.temp_set', container=task_container.name) }}">
         {% if task_container.set %}
             {% set task_status = task_container.set[0].status %}
-                {% include "components/status/icon.html" %}
+                {% include "components/element/icon.html" %}
         {% else %}
             <ion-icon class="icon is-medium" name="add"></ion-icon>
         {% endif %}

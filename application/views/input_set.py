@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from application.utility.models_application import Container, Set, Check
 from application.utility.form import SetForm, timestamp_from_selection
 from application.utility.process_setting import thread_set, ExecuteSet
@@ -10,6 +10,7 @@ from humanize import naturaltime
 from time import time
 from datetime import datetime
 from datetime import timedelta
+import logging
 
 
 input_set = Blueprint('input_set', __name__)
@@ -23,6 +24,7 @@ def temp_set(container):
         return old_set[0] if old_set else None
 
     def save_set_to_db(created_set: Set, old_set: Union[Set, None]):
+        logging.info(f'saving {created_set.__dict__}')
         if old_set:
             db.session.delete(old_set)
         db.session.add(created_set)
@@ -50,7 +52,8 @@ def temp_set(container):
         return {'name': target_container.label,
                 'date': (set_datetime := datetime.fromtimestamp(old_set.timestamp)).date() if old_set else now.date(),
                 'time': set_datetime.time() if old_set else now.time(),
-                'temperature': old_set.temperature if old_set else 0
+                'temperature': old_set.temperature if old_set else 0,
+                'email': current_user.email
                 }
 
     def retrieve_recent_container_check(checked_container: Container) -> Union[Check, None]:
@@ -93,17 +96,25 @@ def temp_set(container):
     all_containers = Container.query.all()
     existing_set = retrieve_set(set_container)
     set_form = SetForm(data=set_data(set_container, existing_set))
+
     checks = retrieve_relevant_checks(set_container, existing_set)
 
     if set_form.validate_on_submit():
+        logging.info('VALIDATE !')
         if set_form.cancel.data:
+            logging.info('CANCEL !')
+
             cancel_set(existing_set)
         else:
             set_container.label = set_form.name.data
         if set_form.save.data:
+            logging.info('SAVE !')
+
             new_set = create_set(set_form, set_container)
             save_set_to_db(new_set, existing_set)
         if set_form.submit.data:
+            logging.info('SUBMIT !')
+
             new_set = create_set(set_form, set_container)
             new_set.status = 'running'
             save_set_to_db(new_set, existing_set)
@@ -112,7 +123,8 @@ def temp_set(container):
                 status=new_set.status,
                 temperature=new_set.temperature,
                 timestamp=new_set.timestamp,
-                container=set_container
+                container=set_container,
+                email=set_form.email.data
             )
             thread_set(executed_set=executed_set)
 

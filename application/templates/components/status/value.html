@@ -1,6 +1,0 @@
-
-{% if task_container.set %}
-    {% set task_status = task_container.set[0].status %}
-{% elif task_container.task %}
-    {% set task_status = task_container.task[0].status %}
-{% endif %}

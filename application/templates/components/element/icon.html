@@ -1,0 +1,24 @@
+
+{% if task_container.set %}
+    {% set task_status = task_container.set[0].status %}
+{% elif task_container.task %}
+    {% set task_status = task_container.task[0].status %}
+{% endif %}
+
+{% if not task_status %}
+                {% set status_icon = 'add' %}
+{% elif task_status == 'new' %}
+                {% set status_icon = 'extension-puzzle-outline' %}
+{% elif task_status == 'ended' %}
+                {% set status_icon = 'stop' %}
+{% elif task_status == 'cancelled' %}
+                {% set status_icon = 'close' %}
+{% elif task_status == 'error' %}
+                {% set status_icon = 'alert-circle-sharp' %}
+{% elif task_status == 'running' %}
+                {% set status_icon = 'play-circle-sharp' %}
+{% else %}
+                {% set status_icon = 'bug' %}
+{% endif %}
+
+<ion-icon class="icon is-large" name="{{status_icon}}"></ion-icon>

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Union
 
 
 @dataclass
@@ -28,6 +29,7 @@ class ExecuteSet:
     temperature: int
     timestamp: int
     container: str
+    email: str
 
 
 @dataclass
@@ -42,8 +44,9 @@ class ExecuteTask:
     t_freeze: int
     status: str
     container: str
-    reads: list
-    controls: list
+    reads: Union[None, list]
+    controls: Union[None, list]
+    email: str
 
 
 @dataclass(frozen=True)

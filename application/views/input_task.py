@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from application.utility.models_application import Container, Thermometer, Task, Check
+from application.utility.models_process import ExecuteTask
 from application.utility.form import TaskForm, timestamp_from_selection
 from application.utility.process_tasking import thread_task
 from application import db
@@ -60,7 +61,8 @@ def task(container: str):
             "t_start": old_task.t_start if old_task else 30,
             "t_max": old_task.t_max if old_task else 43,
             "t_min": old_task.t_min if old_task else 35,
-            "t_freeze": old_task.t_freeze if old_task else 0
+            "t_freeze": old_task.t_freeze if old_task else 0,
+            "email": current_user.email
         }
 
     def retrieve_recent_container_check(checked_container: Container) -> Union[Check, None]:
@@ -152,6 +154,20 @@ def task(container: str):
             logging.info('LAUNCHING TASK')
             existing_task.status = 'running'
             db.session.commit()
-            thread_task(existing_task.id)
+            execute_task = ExecuteTask(
+                id=existing_task.id,
+                container=task_container.name,
+                start=existing_task.start,
+                duration=existing_task.duration,
+                t_start=existing_task.t_start,
+                t_min=existing_task.t_min,
+                t_max=existing_task.t_max,
+                t_freeze=existing_task.t_freeze,
+                status=existing_task.status,
+                email=form.email.data,
+                controls=None,
+                reads=None,
+            )
+            thread_task(execute_task)
 
     return render_task_form(form, task_container, all_containers, thermometer_map, checks)

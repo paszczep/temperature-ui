@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 import logging
 from pathlib import Path
 from dotenv import dotenv_values
+from typing import Union
 
 
 def retrieve_env_values():
@@ -30,7 +31,11 @@ class Email:
         msg.attach(MIMEText(self.message, "plain"))
         return msg
 
-    def send(self, message: str):
+    def send(self, message: str, email: Union[None, str] = None):
+        if email:
+            self.receiver_email = email
+            # pass
+
         self.message = message
         msg = self._create_mime()
         server = None

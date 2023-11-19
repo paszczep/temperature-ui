@@ -1,0 +1,8 @@
+{% if setpoint_check.read_setpoint %}
+    <div class="row-container-always">
+        <ion-icon name="eye-outline" class="left-pad icon is-medium tile is-child"></ion-icon>
+        <span class="left-pad-30 tile p is-size-4">{{ setpoint_check.read_setpoint }}°C</span>
+    </div>
+{% else %}
+        <ion-icon class="tile is-2 icon is-medium" name="eye-off-outline"></ion-icon>
+{% endif %}

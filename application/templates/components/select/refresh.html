@@ -1,15 +1,3 @@
-<!--{% if '/set/' in url_for(request.endpoint, container=task_container.name) %}-->
-<!--<a class="button is-primary is-outlined is-large"-->
-<!--   href="{{ url_for('input_set.temp_set', container=task_container.name) }}">-->
-<!--    <ion-icon class="icon is-large" name="refresh"></ion-icon>-->
-<!--</a>-->
-<!--{% elif '/task/' in url_for(request.endpoint, container=task_container.name) %}-->
-<!--<a class="button is-primary is-outlined is-large"-->
-<!--   href="{{ url_for('input_task.task', container=task_container.name) }}">-->
-<!--    <ion-icon class="icon is-large" name="refresh"></ion-icon>-->
-<!--</a>-->
-<!--{% endif %}-->
-
 
 {% if '/set/' in url_for(request.endpoint, container=task_container.name) %}
     {% set refresh_url = url_for('input_set.temp_set', container=task_container.name) %}
@@ -17,8 +5,6 @@
     {% set refresh_url = url_for('input_task.task', container=task_container.name) %}
 {% endif %}
 
-
-<a class="button is-link is-outlined is-large"
-   href="{{ refresh_url }}">
+<a class="button is-link is-outlined is-large" href="{{ refresh_url }}">
     <ion-icon class="icon is-large" name="refresh"></ion-icon>
 </a>

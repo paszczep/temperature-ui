@@ -5,28 +5,23 @@ from application.utility.mail import Email
 from threading import Thread
 import sched
 from time import time, sleep
-from typing import Union
 import logging
 
-RETRY = 4
+MAX_RETRY = 4
 SETTING_INTERVAL = 60*10
 
 
 class SettingSchedulingProcess:
     set_to_go: ExecuteSet
-    retry: int = RETRY
+    retry_count: int = 0
     sent_report: bool = False
 
     def email_report(self):
-        if not self.sent_report:
-            _status = self.set_to_go.status
-            _setting = f'Setting {self.set_to_go.container} - {self.set_to_go.temperature} - {_status}'
-            _map = {
-                'error': f'{_setting} failed',
-                'ended': f'{_setting} ended successfully'
-            }
-            if _status in _map.keys():
-                Email().send(message=_map[_status])
+        _status = self.set_to_go.status
+        if not self.sent_report and _status in ('ended', 'error'):
+            _message = f'{self.set_to_go.container} {self.set_to_go.temperature} {_status}'
+            Email().send(message=_message, email=self.set_to_go.email)
+            self.sent_report = True
 
     def consider_setting_status(self):
         try:
@@ -60,10 +55,10 @@ class SettingSchedulingProcess:
 
     def check_for_errors(self):
         logging.info('checking for api execution failure')
-        if self.retry == RETRY - 2:
+        if self.retry_count == 2:
             executed_control_ids = select_from_db(
                 ExecuteSetControl.__tablename__,
-                select_columns=['control_id'],
+                columns=['control_id'],
                 where_condition={'set_id': self.set_to_go.id}, keys=False)
             logging.info(f'executed controls: {len(executed_control_ids)}')
             if not executed_control_ids:
@@ -77,24 +72,19 @@ class SettingSchedulingProcess:
         self.consider_setting_status()
         self.schedule_setting_enter()
         logging.info(f'scheduling setting {self.set_to_go.container.name} to {self.set_to_go.temperature}°C')
-        if self.retry and self.set_to_go.status == 'running':
-            self.retry -= 1
+        if self.retry_count <= MAX_RETRY:
+            self.retry_count += 1
             self.set_to_go.timestamp = int(time()) + SETTING_INTERVAL
-            logging.info(f'scheduling api launch {self.retry} ')
+            logging.info(f'scheduling api launch {self.retry_count} ')
             self.check_for_errors()
             self.schedule_and_retry_setting()
-        else:
+        elif self.set_to_go.status == 'running':
             self.error_setting()
 
     def execute(self, set_to_go: ExecuteSet):
         self.set_to_go = set_to_go
-        if self.retry == RETRY:
-            sleep(10)
-
-        if self.set_to_go:
-            logging.info(f'setting status {self.set_to_go.status}')
-            if self.set_to_go.status == 'running':
-                self.schedule_and_retry_setting()
+        sleep(15)
+        self.schedule_and_retry_setting()
 
 
 def thread_set(executed_set: ExecuteSet):

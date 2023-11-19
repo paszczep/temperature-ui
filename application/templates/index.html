@@ -5,7 +5,7 @@
 <div class="columns box tile is-vertical center">
         <div class="column center tile is-child">
             <a class="button is-large is-success" href="{{ url_for('control.tasks') }}">
-                {% include "components/logo.html" %}
+                {% include "components/element/logo.html" %}
             </a>
         </div>
         {% if current_user.is_authenticated %}
@@ -16,7 +16,6 @@
         {% endif %}
 </div>
 <div>
-    <ion-icon class="icon" name="logo-tux"></ion-icon>
     <ion-icon class="icon" name="logo-python"></ion-icon>
     <ion-icon class="icon" name="logo-amazon"></ion-icon>
     <ion-icon class="icon" name="logo-docker"></ion-icon>

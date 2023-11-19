@@ -33,6 +33,7 @@ class HoursDelta(IntegerField):
 
 
 class TaskForm(FlaskForm):
+    email = StringField('Email', validators=[Length(min=3, max=128)])
     name = StringField('Name', validators=[Length(min=3, max=16)])
     choices = QuerySelectMultipleFieldWithCheckboxes("Choices")
     date = DateField('Date')
@@ -49,6 +50,7 @@ class TaskForm(FlaskForm):
 
 
 class SetForm(FlaskForm):
+    email = StringField('Email', validators=[Length(min=3, max=128)])
     name = StringField('Name', validators=[Length(min=3, max=16)])
     temperature = IntegerField('Set temperature')
     date = DateField('Date')
