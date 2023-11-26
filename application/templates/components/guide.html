@@ -1,11 +1,30 @@
-<div class="columns">
-    <div class="column">
-        {% include "components/guide/main.html" %}
-    </div>
-    <div class="column">
-        {% include "components/guide/statuses.html" %}
-    </div>
-    <div class="column">
-        {% include "components/guide/controls.html" %}
-    </div>
+{% if guide %}
+<div class="columns is-centered">
+{% for section_name, section_values in guide.items() %}
+
+<div class="column">
+<table class="table has-text-dark">
+<thead>
+    <tr>
+        <th></th>
+        <th>{{section_name}}</th>
+    </tr>
+</thead>
+<tbody>
+    {% for row in section_values %}
+            <tr>
+                {% if row[0]|length > 3 %}
+                    <td><ion-icon class="icon is-medium" name="{{row[0]}}"></ion-icon></td>
+                {% else %}
+                    <td>{{row[0]}}</td>
+                {% endif %}
+                <td>{{row[1]}}</td>
+            </tr>
+    {% endfor %}
+</tbody>
+</table>
 </div>
+
+{% endfor %}
+</div>
+{% endif %}

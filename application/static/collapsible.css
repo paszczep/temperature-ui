@@ -9,5 +9,8 @@
 
 .content {
     display: none;
-    padding: 10px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0;
+    padding: 0;
 }

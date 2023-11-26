@@ -17,7 +17,7 @@ class Email:
     env_values = retrieve_env_values()
 
     sender_email: str = env_values.get('EMAIL_ADDRESS')
-    receiver_email: str = env_values.get('EMAIL_RECEIVER')
+    receiver_email: str
     subject: str = "tempehomat"
     message: str = 'test'
     password: str = env_values.get('EMAIL_PASSWORD')

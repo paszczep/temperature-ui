@@ -24,7 +24,7 @@ def temp_set(container):
         return old_set[0] if old_set else None
 
     def save_set_to_db(created_set: Set, old_set: Union[Set, None]):
-        logging.info(f'saving {created_set.__dict__}')
+        logging.info(f'saving set')
         if old_set:
             db.session.delete(old_set)
         db.session.add(created_set)

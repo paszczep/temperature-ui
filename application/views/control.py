@@ -2,7 +2,6 @@ from flask import Blueprint, redirect, render_template
 from flask_login import login_required
 from time import time
 from humanize import naturaltime
-from application.utility.mail import send_mail
 from application.utility.launch import initialize_database, check_containers, perform_api_test
 from application.utility.models_application import (Check, Container, Set, data_objects, relationship_objects,
                                                     object_objects)
@@ -78,5 +77,4 @@ def check():
 @login_required
 def test():
     perform_api_test()
-    # send_mail(message='test')
     return redirect('/control')
