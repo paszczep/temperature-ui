@@ -1,5 +1,5 @@
 {% if guide %}
-<div class="columns is-centered">
+<div class="columns is-centered is-full">
 {% for section_name, section_values in guide.items() %}
 
 <div class="column">
@@ -13,7 +13,7 @@
 <tbody>
     {% for row in section_values %}
             <tr>
-                {% if row[0]|length > 3 %}
+                {% if row[0] not in ('min', 'max') %}
                     <td><ion-icon class="icon is-medium" name="{{row[0]}}"></ion-icon></td>
                 {% else %}
                     <td>{{row[0]}}</td>

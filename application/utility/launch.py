@@ -16,7 +16,7 @@ key_1 = env_values.get("API_KEY_1")
 key_2 = env_values.get("API_KEY_2")
 aws_key_id = env_values.get("AWS_KEY_ID")
 aws_secret_key = env_values.get("AWS_SECRET_KEY")
-run_local_api = True
+run_local_api = False
 
 if run_local_api:
     logging.info('local api')
