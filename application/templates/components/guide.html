@@ -1,29 +1,29 @@
 {% if guide %}
-<div class="columns is-centered is-full">
+<div class="columns">
 {% for section_name, section_values in guide.items() %}
 
-<div class="column">
-<table class="table has-text-dark">
-<thead>
-    <tr>
-        <th></th>
-        <th>{{section_name}}</th>
-    </tr>
-</thead>
-<tbody>
-    {% for row in section_values %}
+    <div class="column">
+    <table class="table has-text-dark">
+        <thead>
             <tr>
-                {% if row[0] not in ('min', 'max') %}
-                    <td><ion-icon class="icon is-medium" name="{{row[0]}}"></ion-icon></td>
-                {% else %}
-                    <td>{{row[0]}}</td>
-                {% endif %}
-                <td>{{row[1]}}</td>
+                <th></th>
+                <th>{{section_name}}</th>
             </tr>
-    {% endfor %}
-</tbody>
-</table>
-</div>
+        </thead>
+        <tbody>
+            {% for row in section_values %}
+                <tr>
+                    {% if row[0] not in ('min', 'max') %}
+                        <td><ion-icon class="icon is-medium" name="{{row[0]}}"></ion-icon></td>
+                    {% else %}
+                        <td>{{row[0]}}</td>
+                    {% endif %}
+                        <td>{{row[1]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
 
 {% endfor %}
 </div>
